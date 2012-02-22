@@ -1,0 +1,43 @@
+<script src='/home/mike/Documents/rails/todoapp/public/javascripts/jquery/jquery-1.7.1.min.js'></script>
+<script>
+function compareBintoHex(binary, hex){
+  n1 = convertToBase(binary, 2)
+  n2 = convertToBase(hex, 16)
+  if (n1 < 0 || n2 < 0){
+   document.write('false');
+  } else {
+   document.write(n1 == n2);
+}
+}
+
+function digitToValue(c){
+  if (c >= '0' && c <= '9'){ 
+    return (c - '0');
+}
+  else if (c >= 'A' && c<= 'F'){
+   return (10 + c - 'A');
+}
+  else if (c >= 'a' && c<= 'f'){ 
+    return (10 + c - 'a');
+}
+  return -1
+}
+
+function convertToBase(number, base){
+  if (base < 2 || (base > 10 && base != 16)){
+   return -1
+}
+  value = 0;
+  for (i = number.length -1; i>=0; i--){
+    digit = digitToValue(number.charAt(i));
+}
+  if (digit < 0 || digit >= base){
+    return -1
+}
+  exp = number.length - 1 - i
+  value += digit * Math.pow(base, exp);
+
+return value;
+}  
+</script>
+<button onclick = "compareBintoHex('0011 1111 0111 1010', '0x3F7A');">mike</button>
