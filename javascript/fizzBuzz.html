@@ -1,0 +1,31 @@
+<script>
+function uniqueChars(str){
+  a = str.split('');
+  b = a.sort();
+  var check_unique = [];
+  for (i = 0; i<b.length - 1; b++){
+    
+    if (b[i + 1] === b[i]){
+      check_unique.push(b[i]);
+     }
+      alert(check_unique)
+ }
+};
+
+function fizzBuzz(){
+  a = [];
+  b = [];
+  for(i=0;i<=100;i++)
+    if (i%3 === 0){
+      document.write('fizz')
+      a.push('fizz')
+     }
+    else if (i%5 === 0) {
+      document.write('buzz')
+      b.push('buzz')
+     }
+      alert(a.length)
+      alert(b.length)
+     }
+      </script>
+      <button onclick = fizzBuzz()>ff</button>
