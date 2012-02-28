@@ -6,5 +6,7 @@
   ,    "carrier": ""
   ,    "socket.io": ""
   ,    "connect": ""
+  ,    "express": ""
+  ,    "jade": ""
   }
 }
