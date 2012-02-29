@@ -3,14 +3,19 @@ var form = require('connect-form')
 var formidable = require("formidable");
 var fs = require('fs');
 
-var app = express.createServer();
+var products = require('./products');
+var photos = require('./photos');
 
+var app = express.createServer();
+var MemStore = require('connect').session.MemoryStore;
 
 app.configure('development', function () {
   app.use(express.logger());
   app.use(express.bodyParser()); //assigns a 'body' property to the request
   app.use(express.methodOverride());  //replaces any request methods with underscore methods. bodyParser needs to be 1st!
   app.use(express.static(__dirname + '/static'));
+  app.use(express.cookieParser());
+  app.use(express.session({        secret: 'secret_key',        store : MemStore({            reapInterval : 60000*10        })    }))
   app.use(express.errorHandler({
     dumpExceptions: true,
     showStack: true
@@ -22,27 +27,69 @@ app.configure('production', function () {
   app.use(express.bodyParser()); //assigns a 'body' property to the request
   app.use(express.methodOverride());  //replaces any request methods with underscore methods. bodyParser needs to be 1st!
   app.use(express.static(__dirname + '/static'));
+  app.use(express.cookieParser());
+ app.use(express.session({        secret: 'secret_key',        store : MemStore({            reapInterval : 60000*10        })    }))
 });
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-//app.set('view options', {layout: true});
+
+app.dynamicHelpers(
+  {
+    session: function(req, res){
+      return req.session;
+    },
+    
+    flash: function(req, res){
+      return req.flash();
+      }
+     });
+
+function requiresLogin(req, res, next){
+  if (req.session.user){
+    next();
+    } else {
+      res.redirect('/sessions/new?redir=' + req.url);
+      }
+    };
 
 app.get('/', function(req, res) {
   res.render('root');
 });
 
-var products = require('./products');
-var photos = require('./photos');
+users = require('./users');
 
+app.get('/sessions/new', function(req, res) {
+  res.render('sessions/new', {locals: {
+    redir: req.query.redir
+  }});
+});
 
-app.get('/products', function(req, res){
+app.post('/sessions', function(req, res){
+  users.authenticate(req.body.login, req.body.password, function(){
+  if (user){
+    req.session.user = user;
+    res.redirect(req.body.redir || '/')
+    } else {
+      req.flash('warn', 'login failed')
+      res.render('sessions/new', {locals: {redir: req.body.redir}});
+      }
+      })
+});
+
+app.get('/sessions/destroy', function(req, res){
+  delete req.session.user;
+      res.redirect('/'); 
+
+});
+
+app.get('/products', requiresLogin, function(req, res){
   res.render('products/index', {locals: {
     products: products.all
     }})
   })
 
-app.get('/products/new', function(req, res){
+app.get('/products/new', requiresLogin, function(req, res){
     res.render('products/new', {locals: {
     product: req.body && req.body.product || products.new()
     }})
