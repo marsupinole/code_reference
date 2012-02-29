@@ -8,5 +8,7 @@
   ,    "connect": ""
   ,    "express": ""
   ,    "jade": ""
+  ,  "connect-form": ""
+  ,  "formidable":  ""
   }
 }
