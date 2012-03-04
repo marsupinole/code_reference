@@ -1,4 +1,4 @@
-a = [‘a’, ‘b’, ‘c’]
+a = %w(a b c)
 b = a.slice!(-1)
 c = a.reverse
 d  = []

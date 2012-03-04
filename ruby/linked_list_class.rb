@@ -39,3 +39,4 @@ mike.append("orange")
 mike.append("yellow")
 
 puts mike.display_elem {|e| puts e} 
+
