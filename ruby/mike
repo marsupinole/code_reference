@@ -1,4 +1,6 @@
-list = %w(A
+2
+20
+A
 AD
 APPLE
 AX
@@ -17,9 +19,4 @@ QUESTION
 QUORA
 WONDERLAND
 ZA
-ZOOLOGY)
-
-
-
-
-print list
+ZOOLOGY

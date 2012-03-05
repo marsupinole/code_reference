@@ -1,6 +1,4 @@
-
-
-scrabble_hash = {"A" => 1, "E" => 1, "I" => 1, "L" => 1, "N" => 1, "O" => 1, "R" => 1, "S" => 1, "T" => 1, "U" => 1, "D" => 2, "G" => 2, "B" => 3, "C" => 3, "M" => 3, "P" => 3, "F" => 4, "H" => 4, "V" => 4, "W" => 4, "Y" => 4, "K" => 5, "J" => 8, "X" => 8, "Q" => 10, "Z" => 10}
+# Enter your code here. Read input from STDIN. Print output to STDOUT
 
 def add_word_values(arry)
 	x = 0
@@ -47,22 +45,23 @@ def order_words(arry)
 end
 
 
-def find_scrabble_score(*args, letters_per_word)
+def find_scrabble_score(*args)
+    number_of_letters = args[0]
+    args.shift[0] && args.shift[1]
 	  word_of_correct_len = []
 	  word_values = []
 
 	args.each {|x| x.downcase!}
     i = 0 
       while i < args.length
-      	if args[i].length == letters_per_word
+      	if args[i].length == number_of_letters
       		word_of_correct_len.push(args[i])
       	
       	end
       	i += 1
 
 end
-    word_of_correct_len.sort!
-    word_of_correct_len.slice!(3..7)
+    #order_words(word_of_correct_len)
 
 	str_to_array = word_of_correct_len.map! { |x| x.split(//) }
 	
@@ -76,4 +75,4 @@ end
 add_word_values(value_arry)
 end
 
-puts find_scrabble_score("A", "AD", "APPLE", "AX", "AY", "BAG", "BAT", "BO", "CONCERTO", "EX", "RA", "PI", "ZA", 2)
+puts find_scrabble_score(2, 20, "A", "AD", "APPLE", "AX", "AY", "BAG", "BAT", "BO", "CONCERTO", "EX", "RA", "PI", "ZA")
