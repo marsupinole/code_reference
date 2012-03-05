@@ -1,16 +1,8 @@
-def separate_arrays(arry)
-  	arry_len = arry.length
-  	arry2 = []
-    #y = 0
-    arry.take_while do 
-      |y| y[0][1] == y[0+1][1]         
-      
-    end
-    
-end
 
-a = [["a","b"], ["a", "c"], ["a", "o"], ["d", "c"], ["c", "n"]]
+a = [["a","b"], ["d", "c"], ["a", "o"], ["d", "g"], ["c", "a"]]
 
-print separate_arrays(a)
+b = a.group_by(&:first).values.map {|e| e.length > 1 ? e : e.flatten}
 
-#a = [["mike","b"], ["mike", "c"], ["ryan", "o"], ["tim", "c"], ["ryan", "n"]]
+print b[2]
+
+
