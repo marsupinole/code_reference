@@ -1,10 +1,14 @@
 # Enter your code here. Read input from STDIN. Print output to STDOUT
 
 def add_word_values(arry)
-  x = 0
-  sum_arry = arry.map {|a| x = x + a }
-  final_sum = sum_arry.pop
-  return final_sum
+    x = 0
+    sum_arry = arry.map {|a| x = x + a }
+      if sum_arry.length > 1
+      final_sum = sum_arry.pop
+      final_sum
+  else 
+    sum_arry
+  end
 end
 
 def hash_lookup(string_val)
@@ -22,26 +26,31 @@ def hash_lookup(string_val)
       return 8
      else string_val == "Q" || string_val == "Z" 
       return 10
-   
-    end
+   end
+end
+
+
+def ensure_minimum(a)
+  minimum = a.inject(Hash.new(0)) {|hash, val| hash[val] += 1; hash}.entries.max_by {|entry| entry.last}
+  if minimum[1] == 1
+  else
+  a.slice!(a.index(minimum[0]))
+    ensure_minimum(a)
   end
+  a
+end
 
-
-def order_words(arry)
-  hash_key = []
-  hash_val = []
-  hash = Hash.new(0)
-
-  arry.each do |v|
-     hash[v] += 1
-    end
-
-    hash.each do |elem, num|
-      hash_key.push(elem)
-      hash_val.push(num)
-    end
-    hash_key
-    hash_val
+def sort_letters(arry)
+  b = arry.group_by(&:first).values.map {|e| e.length > 1 ? e : e.flatten}
+  x = 0
+while x < b.length
+  if b[x].length % 2 == 0 
+    b.delete_at(b.index(b[x])) 
+  end
+x += 1
+ 
+end
+  b
 end
 
 
@@ -59,21 +68,33 @@ def find_scrabble_score(args)
         
         end
         i += 1
-
 end
+
+  if word_of_correct_len.empty?
+    return 0
+    break
+  end
     sort_words = word_of_correct_len.sort
-    slice_words = sort_words.slice(0..2)
 
-  str_to_array = slice_words.map! { |x| x.split(//) }
+  str_to_array = sort_words.map! { |x| x.split(//) }
+  sorted_letters = sort_letters(ensure_minimum(str_to_array))
+  lead_array = sorted_letters.shift
   
-    i = 0
-    value_arry = []
-  while i < str_to_array.length
-  letter = str_to_array[i].flatten
-  value = letter.each {|x| value_arry.push(hash_lookup(x))}
-  i += 1
+  i = 0
+  value_arry = []
+  while i < lead_array.length
+    if lead_array.length > 1
+      letter = lead_array[i].flatten
+      value = letter.each {|x| value_arry.push(hash_lookup(x))}
+    
+    else lead_array == 1
+      letter = lead_array[i]
+      value = letter.each {|x| value_arry.push(hash_lookup(x))}
+    
 end
-add_word_values(value_arry)
+ i += 1
+end
+ add_word_values(value_arry)
 end
 
 stringify_input = $stdin.map {|x| x.to_s}

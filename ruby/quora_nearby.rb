@@ -77,17 +77,51 @@ while u < topic_array.length
 	u += 1
 end 
 
+
+def map_question_to_topicId(int, local_topic_array)
+	q = 0
+	while q < local_topic_array.length
+		if local_topic_array[q][1].to_i == int
+			topic_distance_value = local_topic_array[q][1].to_i
+			break
+		  end
+		q += 1
+     end
+  topic_distance_value
+end
+
+#take this return
+
+def match_question_to_topic(arry)
+g = 0
+  while g < arry.length
+    arry[g].shift(2)
+    g += 1
+  end
+  arry
+end
+
 r = 0
 question_distance_hash = Hash.new
 while r < question_array.length
-    mike = question_array_split[r][1]
-	question_distance_hash["#{question_array_split[r][1]}"] = [topic_array_split[1]]
-	r += 1
+    id_to_question = "#{question_array_split[r][1]}"  #possible values 1 2 3 0 0 2
+  question_distance_hash[id_to_question] = map_question_to_topicId(id_to_question.to_i, topic_array_split)
+  r += 1
 end 
+$mike = question_distance_hash
+question_distance_value = match_question_to_topic(question_array_split)
 
-topic_amount_per_question = question_array_split
+def topicId_to_distance(l)
+	print $mike[l]
+end
 
-print question_distance_hash.kind_of?(Hash)
-#print question_distance_hash["0"]
+
+def convert_to_topic_distance(array_val)
+    array_val.map! {|m| topicId_to_distance(m)}
+end
+
+question_distance_value.each {|x| convert_to_topic_distance(x)}
 
 
+#puts topic_array_split.length
+#print question_distance_hash["2"]
