@@ -11,6 +11,9 @@ def add_word_values(arry)
   end
 end
 
+scrabble_hash = {"A" => 1, "E" => 1, "I" => 1, "L" => 1, "N" => 1, "O" => 1, "R" => 1, "S" => 1, "T" => 1, "U" => 1, "D" => 2, "G" => 2, "B" => 3, "C" => 3, "M" => 3, "P" => 3, "F" => 4, "H" => 4, "V" => 4, "W" => 4, "Y" => 4, "K" => 5, "J" => 8, "X" => 8, "Q" => 10, "Z" => 10}
+#scrabble_hash.default = 0
+
 def hash_lookup(string_val)
     if string_val == "A" || string_val == "E" || string_val == "I" || string_val == "L" || string_val == "N" || string_val == "O"  || string_val == "R" || string_val == "S" || string_val == "T" || string_val == "U"
       return 1
@@ -30,12 +33,12 @@ def hash_lookup(string_val)
 end
 
 
-def ensure_minimum(a)
+def prevent_duplicates(a)
   minimum = a.inject(Hash.new(0)) {|hash, val| hash[val] += 1; hash}.entries.max_by {|entry| entry.last}
   if minimum[1] == 1
   else
   a.slice!(a.index(minimum[0]))
-    ensure_minimum(a)
+    prevent_duplicates(a)
   end
   a
 end
@@ -77,7 +80,7 @@ end
     sort_words = word_of_correct_len.sort
 
   str_to_array = sort_words.map! { |x| x.split(//) }
-  sorted_letters = sort_letters(ensure_minimum(str_to_array))
+  sorted_letters = sort_letters(prevent_duplicates(str_to_array))
   lead_array = sorted_letters.shift
   
   i = 0
@@ -96,6 +99,11 @@ end
 end
  add_word_values(value_arry)
 end
+
+#you need to use regular expressions
+#flatten is killing you - get rid of it
+#move upcase! like you thought you did
+#after sorting, you must see if adjacent elements differ by only one letter, if so, you check the other side
 
 stringify_input = $stdin.map {|x| x.to_s}
 strip_newlines = stringify_input.map {|y| y.gsub(/[\n]+/, "")}

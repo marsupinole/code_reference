@@ -44,9 +44,9 @@ query_array = stdin_input.slice!((topic_array_len + remove_params_topics.length)
 
 #topic_array is your topic array
 #remove_params_topics is your question array
-#query_array #is your query array 
+#query_array is your query array 
 
-# convert objects to arrays
+# convert the three objects to arrays
 w = 0
 topic_array_split = []
 while w < topic_array.length
@@ -61,12 +61,8 @@ while p < remove_params_topics.length
 	p += 1
 end
 
-q = 0
 query_array_split = []
-while q < query_array.length
-	query_array_split.push(query_array[q].split(' '))
-	q += 1
-end
+query_array.each {|x| query_array_split.push(x.split(' '))}
 #/arrayification
 
 #hash map lookup
@@ -120,7 +116,7 @@ end
 
 question_distance_value.each {|x| convert_to_topic_distance(x)}
 
-print question_distance_value
+print query_array
 
 #take topic_array_split, shift off the zeroth integer, and make Hash with 
 #question distance needs topic keys 

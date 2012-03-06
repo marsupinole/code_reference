@@ -16,6 +16,4 @@ print array.map! {|y| y.inject(0, &:+)}
 #array.map! {|i|  }
 end
 
-#def get_low_score
-
 convert_scores_integers_and_aggragate(question_distance_value)
