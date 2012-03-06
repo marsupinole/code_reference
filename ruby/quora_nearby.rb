@@ -90,8 +90,6 @@ def map_question_to_topicId(int, local_topic_array)
   topic_distance_value
 end
 
-#take this return
-
 def match_question_to_topic(arry)
 g = 0
   while g < arry.length
@@ -112,7 +110,7 @@ $mike = question_distance_hash
 question_distance_value = match_question_to_topic(question_array_split)
 
 def topicId_to_distance(l)
-	print $mike[l]
+	#print $mike[l]
 end
 
 
@@ -122,6 +120,11 @@ end
 
 question_distance_value.each {|x| convert_to_topic_distance(x)}
 
+print question_distance_value
+
+#take topic_array_split, shift off the zeroth integer, and make Hash with 
+#question distance needs topic keys 
+#get one array for id and add to another array for score, and then make hash
 
 #puts topic_array_split.length
 #print question_distance_hash["2"]
