@@ -16,8 +16,6 @@ print array.map! {|y| y.inject(0, &:+)}
 #array.map! {|i|  }
 end
 
-def get_low_score
+#def get_low_score
 
 convert_scores_integers_and_aggragate(question_distance_value)
-
-#flatten, add the 100, sort it, remove excess based on second column, and map
