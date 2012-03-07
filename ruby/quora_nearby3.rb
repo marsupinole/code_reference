@@ -47,7 +47,7 @@ query_array.each {|x| query_array_split.push(x.split(' '))}
 
 #methods for both query formats(i.e public methods)
 def add_index_to_each_elem(array)
-  y = 0 
+	y = 0 
     while y < array.length
     mike = array[y].push(y)
     y += 1
@@ -55,24 +55,24 @@ def add_index_to_each_elem(array)
 end
 
 def topic_and_Q_arrays_to_i(array)
-  y = 0
-  while y < array.length
-    array[y].map! {|m| m.to_i}
-    y += 1
-  end
-  array
+	y = 0
+	while y < array.length
+		array[y].map! {|m| m.to_i}
+		y += 1
+	end
+	array
 end
 
 def combine_distances_and_hash(array)
-  y = 0
-  while y < array.length
-    array[y].map! {|m| m.to_i}
-    y += 1
-  end
-  integer_array = array
-  integer_array.map! {|x,y,z| [x, Math.sqrt(y*y + z*z)]}
+	y = 0
+	while y < array.length
+		array[y].map! {|m| m.to_i}
+		y += 1
+	end
+	integer_array = array
+	integer_array.map! {|x,y,z| [x, Math.sqrt(y*y + z*z)]}
 
-  flatten_array = integer_array.flatten!
+	flatten_array = integer_array.flatten!
     pancake = Hash[*flatten_array]
     pancake
 end
@@ -86,13 +86,13 @@ question_integer_array = topic_and_Q_arrays_to_i(question_array_split)
 query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
 
 def pythag_theorem(array)
-  query_array_with_score = [array[0], array[1], (Math.sqrt(array[2] * array[2] + array[3] * array[3]))]
-  distance = query_array_with_score[2]
+	query_array_with_score = [array[0], array[1], (Math.sqrt(array[2] * array[2] + array[3] * array[3]))]
+	distance = query_array_with_score[2]
   distance
 end
 
 def insert_query_scores(array)
-      josh = ["t", 2, 0, 0] #this is passed in as argument in real thing!!!!!
+      josh = ["q", 5, 100, 100] #this is passed in as argument in real thing!!!!!
       mike = pythag_theorem(josh)
       z = 0
       while z < array.length
@@ -108,26 +108,67 @@ def add_index_to_each_elem(array)
         low_score = array[y].push(y)
       y += 1
       end
-      array.sort!  #this makes it seem wrong but it saves resources
+      array.sort!
     array
 end
 #/publics
 
+#def query_is_question_format(query_array_mixed)
+    
+    def get_single_score(elem)
+      elem_value = $global_topic_score[elem]
+      elem_value
+    end
+
+    def map_topic_score_question(array)
+	  z = 0
+      while z < array.length
+       array[z].map! {|x| get_single_score(x)}
+      z += 1
+    end
+      array #=> your distance SCORES
+    end
+
+    def retain_lowest_score(array)  #this is ugly!!!!
+        array.each {|x| x.sort!}
+        array.map! {|x| x.slice(0)}
+        array.map! {|x| Array(x) }
+        array
+    end
+
+	  pare_q_array = question_integer_array.each {|n| n.slice!(0..1)}
+
+    topic_score_map = combine_distances_and_hash(topic_array_split)
+    
+    $global_topic_score = topic_score_map
+
+    distance_scores = map_topic_score_question(pare_q_array)
+
+    query_minus_distance = insert_query_scores(distance_scores)
+    
+    lowest_score = retain_lowest_score(query_minus_distance)
+    
+    rank = add_index_to_each_elem(lowest_score) 
+    
+    rank_sans_empty = rank.delete_if {|x| x.length == 1 }
+    
+    #print rank_sans_empty
+    final = rank_sans_empty.group_by(&:first).values.reverse.map!(&:reverse).flatten(1)
+    print final.map! {|x| x[1]}
+    print "\n"
+    print "mike"
+#group by score, then reverse!, then flatten, then pipe
+#o = [[3, 1], [3, 3], [5, 4], [7, 2], [7, 5]]
+#make higher numbered id pipe first
+#b = o.group_by(&:first).values.reverse.map!(&:reverse).flatten(1) #=> [[3, 3], [3, 1], [7, 5], [7, 2], [5, 4]]
+
+
+
+
+
+
 #def query_is_topic_format(query_array_mixed)
 
-distance_coordinants = topic_integer_array.each(&:shift)
 
-distance_coordinants.map! {|x,y| [Math.sqrt(x*x + y*y)]}
 
-scores = insert_query_scores(distance_coordinants)
-
-indexed_scores = add_index_to_each_elem(scores)
-
-#final = indexed_scores.group_by(&:first).values.reverse.map!(&:reverse).flatten(1)
-indexes = indexed_scores.map! {|x| x[1]}
-alan = ["t", 2, 0, 0]
-
-indexes.slice!(alan[1])
-
-print indexes
 
