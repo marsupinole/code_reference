@@ -104,6 +104,8 @@ end
 #flatten is killing you - get rid of it
 #move upcase! like you thought you did
 #after sorting, you must see if adjacent elements differ by only one letter, if so, you check the other side
+#use permutations class iterate based on length of elements
+
 
 stringify_input = $stdin.map {|x| x.to_s}
 strip_newlines = stringify_input.map {|y| y.gsub(/[\n]+/, "")}

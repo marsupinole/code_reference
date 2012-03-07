@@ -1,5 +1,6 @@
 stdin_input = ["3 6 2", "0 0.0 0.0", "1 1.0 1.0", "2 2.0 2.0", "0 1 0", "1 2 0 1", "2 3 0 1 2", "3 0", "4 0", "5 2 1 2", "t 2 0.0 0.0", "q 5 100.0 100.0"]
 
+#organize stdin
 params = stdin_input[0]
 params_arry = params.split(' ')
 topic_amount = params_arry[0].to_i
@@ -41,7 +42,7 @@ query_array_split = []
 query_array.each {|x| query_array_split.push(x.split(' '))}
 #/arrayification
 
-#methods for both query formats
+#methods for both query formats(i.e public methods)
 def add_index_to_each_elem(array)
 	y = 0 
     while y < array.length
@@ -86,7 +87,7 @@ def pythag_theorem(array)
 	distance = query_array_with_score[2]
   distance
 end
-#/public methods
+#/publics
 
 #def query_is_question_format(query_array_mixed)
     
@@ -132,9 +133,7 @@ end
       array
     end
 
-	pare_q_array = question_integer_array.each {|n| n.slice!(0..1)}
-
-	#q_array_minus_empty_topics = pare_q_array.delete_if {|x| x.length == 1 } #=> [[0, 0], [1, 0, 1], [2, 0, 1, 2], [5, 1, 2]] 
+	  pare_q_array = question_integer_array.each {|n| n.slice!(0..1)}
 
     topic_score_map = combine_distances_and_hash(topic_array_split)
     
@@ -143,10 +142,24 @@ end
     distance_scores = map_topic_score_question(pare_q_array)
 
     query_minus_distance = insert_query_scores(distance_scores)
+    
     lowest_score = retain_lowest_score(query_minus_distance)
+    
     rank = add_index_to_each_elem(lowest_score) 
+    
     rank_sans_empty = rank.delete_if {|x| x.length == 1 }
+    
     print rank_sans_empty
+#group by score, then reverse!, then flatten, then pipe
+o = [[3, 1], [3, 3], [5, 4], [7, 2], [7, 5]]
+#make higher numbered id pipe first
+b = o.group_by(&:first).values.reverse.map!(&:reverse).flatten(1) #=> [[3, 3], [3, 1], [7, 5], [7, 2], [5, 4]]
+
+
+
+
+
+
 #def query_is_topic_format(query_array_mixed)
 
 
