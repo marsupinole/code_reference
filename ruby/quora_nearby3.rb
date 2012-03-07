@@ -46,13 +46,6 @@ query_array.each {|x| query_array_split.push(x.split(' '))}
 #/arrayification
 
 #methods for both query formats(i.e public methods)
-def add_index_to_each_elem(array)
-	y = 0 
-    while y < array.length
-    mike = array[y].push(y)
-    y += 1
-   end
-end
 
 def topic_and_Q_arrays_to_i(array)
 	y = 0
@@ -153,14 +146,23 @@ end
     rank_sans_empty = rank.delete_if {|x| x.length == 1 }
     
     #print rank_sans_empty
-    final = rank_sans_empty.group_by(&:first).values.reverse.map!(&:reverse).flatten(1)
-    print final.map! {|x| x[1]}
-    print "\n"
-    print "mike"
+    
+    final = rank_sans_empty.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
+
+    indexes = final.map! {|x| x[1]}
+    alan = ["q", 5, 100, 100]
+
+    if indexes.length > alan[1]
+      indexes.slice!(alan[1])
+      print indexes
+    else
+      print indexes
+    end
 #group by score, then reverse!, then flatten, then pipe
 #o = [[3, 1], [3, 3], [5, 4], [7, 2], [7, 5]]
 #make higher numbered id pipe first
 #b = o.group_by(&:first).values.reverse.map!(&:reverse).flatten(1) #=> [[3, 3], [3, 1], [7, 5], [7, 2], [5, 4]]
+#5 2 1 0
 
 
 

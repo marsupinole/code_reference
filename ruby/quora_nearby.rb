@@ -46,13 +46,6 @@ query_array.each {|x| query_array_split.push(x.split(' '))}
 #/arrayification
 
 #methods for both query formats(i.e public methods)
-def add_index_to_each_elem(array)
-  y = 0 
-    while y < array.length
-    mike = array[y].push(y)
-    y += 1
-   end
-end
 
 def topic_and_Q_arrays_to_i(array)
   y = 0
@@ -123,11 +116,16 @@ scores = insert_query_scores(distance_coordinants)
 
 indexed_scores = add_index_to_each_elem(scores)
 
-#final = indexed_scores.group_by(&:first).values.reverse.map!(&:reverse).flatten(1)
-indexes = indexed_scores.map! {|x| x[1]}
+final = indexed_scores.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
+#puts final
+
+indexes = final.map! {|x| x[1]}
 alan = ["t", 2, 0, 0]
 
+if indexes.length > alan[1]
 indexes.slice!(alan[1])
-
 print indexes
+else
+  print indexes
+end
 

@@ -1,6 +1,83 @@
-def query_is_topic_format(query_array_mixed, topic)
+#methods for both query formats(i.e public methods)
+def add_index_to_each_elem(array)
+  y = 0 
+    while y < array.length
+    mike = array[y].push(y)
+    y += 1
+   end
+end
 
-  distance_coordinants = topic_integer_array.each(&:shift)
+def topic_and_Q_arrays_to_i(array)
+  y = 0
+  while y < array.length
+    array[y].map! {|m| m.to_i}
+    y += 1
+  end
+  array
+end
+
+def combine_distances_and_hash(array)
+  y = 0
+  while y < array.length
+    array[y].map! {|m| m.to_i}
+    y += 1
+  end
+  integer_array = array
+  integer_array.map! {|x,y,z| [x, Math.sqrt(y*y + z*z)]}
+
+  flatten_array = integer_array.flatten!
+    pancake = Hash[*flatten_array]
+    pancake
+end
+
+def mix_query_array(array)
+  array.map! {|w,x,y,z| [w, x.to_i, y.to_i, z.to_i]}
+end
+
+def route_query_array(array)
+	i = 0
+	while i < array.length
+		if array[i][0] == "t"
+			query_is_topic_format(array[i])
+		else
+			query_is_question_format(array[i])
+		end
+		i += 1
+	end
+end
+
+def pythag_theorem(array)
+  query_array_with_score = [array[0], array[1], (Math.sqrt(array[2] * array[2] + array[3] * array[3]))]
+  distance = query_array_with_score[2]
+  distance
+end
+
+def insert_query_scores(array)
+      josh = ["t", 2, 0, 0] #this is passed in as argument in real thing!!!!!
+      mike = pythag_theorem(josh)
+      z = 0
+      while z < array.length
+        array[z].map! {|x| (mike - x).abs }
+        z += 1
+      end
+    array
+end
+
+def add_index_to_each_elem(array)
+      y = 0 
+      while y < array.length
+        low_score = array[y].push(y)
+      y += 1
+      end
+      array.sort!  #this makes it seem wrong but it saves resources
+    array
+end
+#/publics
+
+def query_is_topic_format(array)
+  stub_array = array
+
+  distance_coordinants = array.each(&:shift)
 
   distance_coordinants.map! {|x,y| [Math.sqrt(x*x + y*y)]}
 
@@ -8,17 +85,20 @@ def query_is_topic_format(query_array_mixed, topic)
 
   indexed_scores = add_index_to_each_elem(scores)
 
-  #final = indexed_scores.group_by(&:first).values.reverse.map!(&:reverse).flatten(1)
-  indexes = indexed_scores.map! {|x| x[1]}
-  alan = ["t", 2, 0, 0]
+  final = indexed_scores.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
+  indexes = final.map! {|x| x[1]}
 
-  indexes.slice!(alan[1])
-
-  print indexes
+  if indexes.length > stub_array[1]
+    indexes.slice!(stub_array[1])
+    print indexes
+  else
+    print indexes
+  end
 
 end
 
-def query_is_question_format(query_array_mixed)
+def query_is_question_format(array)
+    stub_array = array
 
     def get_single_score(elem)
       elem_value = $global_topic_score[elem]
@@ -57,11 +137,17 @@ def query_is_question_format(query_array_mixed)
     
     rank_sans_empty = rank.delete_if {|x| x.length == 1 }
     
-    #print rank_sans_empty
-    final = rank_sans_empty.group_by(&:first).values.reverse.map!(&:reverse).flatten(1)
-    print final.map! {|x| x[1]}
-    print "\n"
-    print "mike"
+    final = rank_sans_empty.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
+    indexes = final.map! {|x| x[1]}
+
+    if indexes.length > stub_array[1]
+      indexes.slice!(stub_array[1])
+      print indexes
+    else
+      print indexes
+    end
+    #print "\n"
+    #print "mike"
 end
 
 stringify_input = $stdin.map {|x| x.to_s}
@@ -107,71 +193,10 @@ remove_params_topics.each {|x| question_array_split.push(x.split(' '))}
 
 query_array_split = []
 query_array.each {|x| query_array_split.push(x.split(' '))}
-#/arrayification
-
-#methods for both query formats(i.e public methods)
-def add_index_to_each_elem(array)
-  y = 0 
-    while y < array.length
-    mike = array[y].push(y)
-    y += 1
-   end
-end
-
-def topic_and_Q_arrays_to_i(array)
-  y = 0
-  while y < array.length
-    array[y].map! {|m| m.to_i}
-    y += 1
-  end
-  array
-end
-
-def combine_distances_and_hash(array)
-  y = 0
-  while y < array.length
-    array[y].map! {|m| m.to_i}
-    y += 1
-  end
-  integer_array = array
-  integer_array.map! {|x,y,z| [x, Math.sqrt(y*y + z*z)]}
-
-  flatten_array = integer_array.flatten!
-    pancake = Hash[*flatten_array]
-    pancake
-end
-
-def mix_query_array(array)
-  array.map! {|w,x,y,z| [w, x.to_i, y.to_i, z.to_i]}
-end
 
 topic_integer_array = topic_and_Q_arrays_to_i(topic_array_split)
 question_integer_array = topic_and_Q_arrays_to_i(question_array_split)
 query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
+route_query_array(query_array_mixed)
+#/arrayification
 
-def pythag_theorem(array)
-  query_array_with_score = [array[0], array[1], (Math.sqrt(array[2] * array[2] + array[3] * array[3]))]
-  distance = query_array_with_score[2]
-  distance
-end
-
-def insert_query_scores(array)
-      josh = ["t", 2, 0, 0] #this is passed in as argument in real thing!!!!!
-      mike = pythag_theorem(josh)
-      z = 0
-      while z < array.length
-        array[z].map! {|x| (mike - x).abs }
-        z += 1
-      end
-    array
-end
-
-def add_index_to_each_elem(array)
-      y = 0 
-      while y < array.length
-        low_score = array[y].push(y)
-      y += 1
-      end
-      array.sort!  #this makes it seem wrong but it saves resources
-    array
-end
