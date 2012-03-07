@@ -3,16 +3,21 @@ question_distance_value = [["0"], ["0", "1"], ["0", "1", "2"], [], [], ["1", "2"
 question_distance_converted = [["0.0"], ["0.0", "1.0"], ["0.0", "1.0", "2.0"], [], [], ["1.0", "2.0"]]
 question_integer_array = [[0, 1, 0], [1, 2, 0, 1], [2, 3, 0, 1, 2], [3, 0], [4, 0], [5, 2, 1, 2]]
 
-def add_range(array)
-    convert_scores = array[1..-1].collect! {|c| c + 5}
+def add_index_to_each_elem(array)
+	y = 0 
+    while y < array.length
+    mike = array[y].push(y)
+    y += 1
+end
+array.reverse!
 end
 
-def remove_element_from_a(array)
-	array.collect! {|x| add_range(x)}
+def reverse(array)
+	array.collect! {|x| x.reverse}
 end
 
-
-print remove_element_from_a(question_integer_array)
+pare_q_array = question_integer_array.each {|n| n.slice!(0..1)}
+print pare_q_array
 #remove_element_from_a(question_integer_array)
 #Each elem in stin is routed by eitther 't' or 'q' and piped into a huge function, the return is piped to standard out
 

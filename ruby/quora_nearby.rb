@@ -1,19 +1,3 @@
-# 3 6 2
-
-# 0 0.0 0.0
-# 1 1.0 1.0
-# 2 2.0 2.0
-
-# 0 1 0
-# 1 2 0 1
-# 2 3 0 1 2
-# 3 0
-# 4 0
-# 5 2 1 2
-
-# t 2 0.0 0.0
-# q 5 100.0 100.0
-
 stdin_input = ["3 6 2", "0 0.0 0.0", "1 1.0 1.0", "2 2.0 2.0", "0 1 0", "1 2 0 1", "2 3 0 1 2", "3 0", "4 0", "5 2 1 2", "t 2 0.0 0.0", "q 5 100.0 100.0"]
 
 params = stdin_input[0]
@@ -57,6 +41,13 @@ query_array_split = []
 query_array.each {|x| query_array_split.push(x.split(' '))}
 #/arrayification
 
+def add_index_to_each_elem(array)
+	y = 0 
+    while y < array.length
+    mike = array[y].push(y)
+    y += 1
+end
+
 def topic_and_Q_arrays_to_i(array)
 	y = 0
 	while y < array.length
@@ -88,7 +79,7 @@ topic_integer_array = topic_and_Q_arrays_to_i(topic_array_split)
 question_integer_array = topic_and_Q_arrays_to_i(question_array_split)
 query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
 
-def find_query_distance_score(array)
+def pythag_theorem(array)
 	query_array_with_score = [array[0], array[1], (Math.sqrt(array[2] * array[2] + array[3] * array[3]))]
 	query_array_with_score
 end
@@ -111,7 +102,7 @@ def query_is_question_format
     end
 
 
-	pare_q_array = question_integer_array.each {|n| n.delete_at(1)}
+	pare_q_array = question_integer_array.each {|n| n.delete_at(1)}  #change this
 
 	q_array_minus_empty_topics = pare_q_array.delete_if {|x| x.length == 1 } #=> [[0, 0], [1, 0, 1], [2, 0, 1, 2], [5, 1, 2]] 
 
@@ -123,7 +114,7 @@ def query_is_question_format
 
     
 def query_is_topic_format
-	
+
 
 
 
