@@ -16,6 +16,10 @@ integer array = convert_scores_integers_and_aggragate(question_distance_value)#=
 
 def flatten__addQuery_and_sort
 
+#Each elem in stin is routed by eitther 't' or 'q' and piped into a huge function, the return is piped to standard out
+
+#make hash with question distance scores, reverse the hash and then push the query score, then sort the keys 
+
 #flatten, add the 100, sort it, remove excess based on second column, and map to topic id's
 
 #1.00 1.00 means right triangle so a^2 + b^2 = c^2.  They WILL test you on decimals.  Just change the topic scores and remap

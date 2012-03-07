@@ -1,5 +1,6 @@
 question_distance_value = [["0"], ["0", "1"], ["0", "1", "2"], [], [], ["1", "2"]]
 topic_array_data = [["0", "0.0", "0.0"], ["1", "1.0", "1.0"], ["2", "2.0", "2.0"]]
+#make reverse hash of above and use question distance value scores as key to map back to id
 id_and_distance = [["0", "0.0"], ["1", "1.0"], ["2", "2.0"]]
 
 
@@ -37,7 +38,7 @@ def map_topic_score_question(array)
     integer_array[z].map! {|x| get_single_score(x)}
     z += 1
   end
-  print integer_array #=> 00101212
+  print integer_array[0] #=> your distance SCORES
 end
 
-map_topic_score_question(question_distance_value)
+map_topic_score_question(question_distance_value) # add query distance value scores to this array and sort

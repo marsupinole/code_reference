@@ -1,11 +1,7 @@
 query_array = ["t 2 0.0 0.0", "q 5 100.0 100.0"]
 query_array_split = [["t", "2", "0.0", "0.0"], ["q", "5", "100.0", "100.0"]]
+query_array_mixed = [["t", 2, 0, 0], ["q", 5, 100, 100]]
 
-def pythag_theorem(a, b)
-	c = (a * a) + (b * b)
-	result = Math.sqrt(c)
-	result
-end
 
 def find_topic_score(array)
 	array.each do |x|
@@ -31,7 +27,7 @@ def split_question_type(array) #=> the main bottom function
 	end
 end
 
-print split_question_type(query_array_split)
+print split_question_type(query_array_mixed)
 
 
 

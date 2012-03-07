@@ -16,3 +16,5 @@ query_array #raw data
 ["t 2 0.0 0.0", "q 5 100.0 100.0"]
 query_array_split #all your query data 
 [["t", "2", "0.0", "0.0"], ["q", "5", "100.0", "100.0"]]
+query_array_split2 #combine this with query_array_split
+[["t", 2, 0, 0], ["q", 5, 100, 100]]

@@ -47,22 +47,25 @@ query_array = stdin_input.slice!((topic_array_len + remove_params_topics.length)
 #query_array is your query array 
 
 # convert the three objects to arrays
-w = 0
 topic_array_split = []
-while w < topic_array.length
-	topic_array_split.push(topic_array[w].split(' '))
-	w += 1
-end
+topic_array.each {|x| topic_array_split.push(x.split(' '))}
 
-p = 0
 question_array_split = []
-while p < remove_params_topics.length
-	question_array_split.push(remove_params_topics[p].split(' '))
-	p += 1
-end
+remove_params_topics.each {|x| question_array_split.push(x.split(' '))}
 
 query_array_split = []
 query_array.each {|x| query_array_split.push(x.split(' '))}
+
+def mix_query_array(array)
+array.map! {|w,x,y,z| [w, x.to_i, y.to_i, z.to_i]}
+end
+
+query_array_mixed = mix_query_array(query_array_split)
+
+def find_query_distance_score(array)
+	query_array_with_score = [array[0], array[1], (Math.sqrt(array[2] * array[2] + array[3] * array[3]))]
+	query_array_with_score
+end
 #/arrayification
 
 #hash map lookup
