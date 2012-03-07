@@ -55,75 +55,75 @@ remove_params_topics.each {|x| question_array_split.push(x.split(' '))}
 
 query_array_split = []
 query_array.each {|x| query_array_split.push(x.split(' '))}
+#/arrayification
 
-def mix_query_array(array)
-array.map! {|w,x,y,z| [w, x.to_i, y.to_i, z.to_i]}
+def topic_and_Q_arrays_to_i(array)
+	y = 0
+	while y < array.length
+		array[y].map! {|m| m.to_i}
+		y += 1
+	end
+	array
 end
 
-query_array_mixed = mix_query_array(query_array_split)
+def combine_distances_and_hash(array)
+	y = 0
+	while y < array.length
+		array[y].map! {|m| m.to_i}
+		y += 1
+	end
+	integer_array = array
+	integer_array.map! {|x,y,z| [x, Math.sqrt(y*y + z*z)]}
+
+	flatten_array = integer_array.flatten!
+    pancake = Hash[*flatten_array]
+    pancake
+end
+
+def mix_query_array(array)
+  array.map! {|w,x,y,z| [w, x.to_i, y.to_i, z.to_i]}
+end
+
+topic_integer_array = topic_and_Q_arrays_to_i(topic_array_split)
+question_integer_array = topic_and_Q_arrays_to_i(question_array_split)
+query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
 
 def find_query_distance_score(array)
 	query_array_with_score = [array[0], array[1], (Math.sqrt(array[2] * array[2] + array[3] * array[3]))]
 	query_array_with_score
 end
-#/arrayification
-
-#hash map lookup
-u = 0
-topic_distance_hash = Hash.new
-while u < topic_array.length
-	topic_distance_hash["#{topic_array_split[u][0]}"] = [topic_array_split[u][1].to_i]
-	u += 1
-end 
 
 
-def map_question_to_topicId(int, local_topic_array)
-	q = 0
-	while q < local_topic_array.length
-		if local_topic_array[q][1].to_i == int
-			topic_distance_value = local_topic_array[q][1].to_i
-			break
-		  end
-		q += 1
-     end
-  topic_distance_value
-end
+def query_is_question_format
+    
+    def get_single_score(elem)
+      elem_value = $global_topic_score[elem]
+      elem_value
+    end
 
-def match_question_to_topic(arry)
-g = 0
-  while g < arry.length
-    arry[g].shift(2)
-    g += 1
-  end
-  arry
-end
-
-r = 0
-question_distance_hash = Hash.new
-while r < question_array.length
-    id_to_question = "#{question_array_split[r][1]}"  #possible values 1 2 3 0 0 2
-  question_distance_hash[id_to_question] = map_question_to_topicId(id_to_question.to_i, topic_array_split)
-  r += 1
-end 
-$mike = question_distance_hash
-question_distance_value = match_question_to_topic(question_array_split)
-
-def topicId_to_distance(l)
-	#print $mike[l]
-end
+    def map_topic_score_question(array)
+	  z = 0
+      while z < array.length
+       array[z].map! {|x| get_single_score(x)}
+      z += 1
+    end
+      array #=> your distance SCORES
+    end
 
 
-def convert_to_topic_distance(array_val)
-    array_val.map! {|m| topicId_to_distance(m)}
-end
+	pare_q_array = question_integer_array.each {|n| n.delete_at(1)}
 
-question_distance_value.each {|x| convert_to_topic_distance(x)}
+	q_array_minus_empty_topics = pare_q_array.delete_if {|x| x.length == 1 } #=> [[0, 0], [1, 0, 1], [2, 0, 1, 2], [5, 1, 2]] 
 
-print query_array
+    topic_score_map = combine_distances_and_hash(topic_array_split)
+    
+    $global_topic_score = topic_score_map
 
-#take topic_array_split, shift off the zeroth integer, and make Hash with 
-#question distance needs topic keys 
-#get one array for id and add to another array for score, and then make hash
+    map_topic_score_question(q_array_minus_empty_topics)
 
-#puts topic_array_split.length
-#print question_distance_hash["2"]
+    
+def query_is_topic_format
+	
+
+
+

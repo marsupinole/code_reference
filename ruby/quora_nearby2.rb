@@ -1,8 +1,7 @@
 question_distance_value = [["0"], ["0", "1"], ["0", "1", "2"], [], [], ["1", "2"]]
 topic_array_data = [["0", "0.0", "0.0"], ["1", "1.0", "1.0"], ["2", "2.0", "2.0"]]
-#make reverse hash of above and use question distance value scores as key to map back to id
 id_and_distance = [["0", "0.0"], ["1", "1.0"], ["2", "2.0"]]
-
+question_values_and_id = [[0, 0], [1, 0, 1], [2, 0, 1, 2], [5, 1, 2]]
 
 def combine_distances_and_hash(array)
 	y = 0
@@ -26,19 +25,17 @@ def get_single_score(elem)
     elem_value
 end
 
+def add_range(array)
+    convert_scores = array[1..-1].collect! {|c| get_single_score(c)}
+end
+
 def map_topic_score_question(array)
-	i = 0
-	while i < array.length
-		array[i].map! {|m| m.to_i}
-		i += 1
-	end
-	integer_array = array
-  z = 0
-  while z < integer_array.length
-    integer_array[z].map! {|x| get_single_score(x)}
+	z = 0
+  while z < array.length
+    array.collect! {|x| add_range(x)}
     z += 1
   end
-  print integer_array[0] #=> your distance SCORES
+  print array #=> your distance SCORES
 end
 
 map_topic_score_question(question_distance_value) # add query distance value scores to this array and sort

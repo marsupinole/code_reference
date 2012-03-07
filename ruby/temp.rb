@@ -1,20 +1,19 @@
 question_array_split = [["0", "1", "0"], ["1", "2", "0", "1"], ["2", "3", "0", "1", "2"], ["3", "0"], ["4", "0"], ["5", "2", "1", "2"]]
 question_distance_value = [["0"], ["0", "1"], ["0", "1", "2"], [], [], ["1", "2"]]
 question_distance_converted = [["0.0"], ["0.0", "1.0"], ["0.0", "1.0", "2.0"], [], [], ["1.0", "2.0"]]
-integer_array = question_distance_value
+question_integer_array = [[0, 1, 0], [1, 2, 0, 1], [2, 3, 0, 1, 2], [3, 0], [4, 0], [5, 2, 1, 2]]
 
-u = 0
-while u < integer_array.length
-	i = integer_array.index(u)
-	integer_array.map! do
-	
-		|x| x.push(i)
-	end
-	u += 1
+def add_range(array)
+    convert_scores = array[1..-1].collect! {|c| c + 5}
 end
 
-print integer_array
+def remove_element_from_a(array)
+	array.collect! {|x| add_range(x)}
+end
 
+
+print remove_element_from_a(question_integer_array)
+#remove_element_from_a(question_integer_array)
 #Each elem in stin is routed by eitther 't' or 'q' and piped into a huge function, the return is piped to standard out
 
 #make hash with question distance scores, reverse the hash and then push the query score, then sort the keys 
@@ -25,6 +24,6 @@ print integer_array
 
 #Your doing it top down, it needs to be bottom up i.e. take the query values first
 
-# checkout this for moving question value back to topic val? h.invert   #=> {0=>"a", 100=>"m", 200=>"d", 300=>"y"}
+#checkout this for moving question value back to topic val? h.invert   #=> {0=>"a", 100=>"m", 200=>"d", 300=>"y"}
 
 #place query score into array of scores, sort, and reverse map back to id's
