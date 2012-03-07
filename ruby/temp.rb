@@ -1,20 +1,19 @@
 question_array_split = [["0", "1", "0"], ["1", "2", "0", "1"], ["2", "3", "0", "1", "2"], ["3", "0"], ["4", "0"], ["5", "2", "1", "2"]]
 question_distance_value = [["0"], ["0", "1"], ["0", "1", "2"], [], [], ["1", "2"]]
 question_distance_converted = [["0.0"], ["0.0", "1.0"], ["0.0", "1.0", "2.0"], [], [], ["1.0", "2.0"]]
+integer_array = question_distance_value
 
-
-def convert_scores_integers_and_aggragate(array)
-z = 0
-while z < array.length
-array[z].map! {|x| x.to_i}
-z += 1
+u = 0
+while u < integer_array.length
+	i = integer_array.index(u)
+	integer_array.map! do
+	
+		|x| x.push(i)
+	end
+	u += 1
 end
-print array
-end
 
-integer array = convert_scores_integers_and_aggragate(question_distance_value)#=> [[0], [0, 1], [0, 1, 2], [], [], [1, 2]]
-
-def flatten__addQuery_and_sort
+print integer_array
 
 #Each elem in stin is routed by eitther 't' or 'q' and piped into a huge function, the return is piped to standard out
 
