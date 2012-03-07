@@ -20,5 +20,6 @@ query_array_split2 #combine this with query_array_split
 [["t", 2, 0, 0], ["q", 5, 100, 100]]
 
 #If query_array_split[0] == "q"
-#question_array_split.pop[1], remove all with length 1, add your query values to all but [0], drop highest results -
-#    - then reverse each so that query result is leading, then sort, then output based on query_array_split[1]. 
+#question_array_split.pop[1], remove all with length 1, convert to integer add your query values to all but [0] - 
+#  -drop highest results then reverse each so that query result is leading, then sort, 
+#  -then output based on query_array_split[1] OR result.length if query_array_split[1] > result.length 
