@@ -1,4 +1,6 @@
-#methods for both query formats(i.e public methods)
+array = ["q", 5, 100, 100]
+topics = [["0", "1", "0"], ["1", "2", "0", "1"], ["2", "3", "0", "1", "2"], ["3", "0"], ["4", "0"], ["5", "2", "1", "2"]]
+topic_array = [["0", "0.0", "0.0"], ["1", "1.0", "1.0"], ["2", "2.0", "2.0"]]
 
 def topic_and_Q_arrays_to_i(array)
   y = 0
@@ -27,18 +29,6 @@ def mix_query_array(array)
   array.map! {|w,x,y,z| [w, x.to_i, y.to_i, z.to_i]}
 end
 
-def route_query_array(array, topics, questions, topic_array)
-	i = 0
-	while i < array.length
-		if array[i][0] == "t"
-			query_is_topic_format(array[i], topics)
-		else
-			query_is_question_format(array[i], questions, topic_array)
-    end
-		i += 1
-	end
-end
-
 def pythag_theorem(array)
   query_array_with_score = [array[0], (Math.sqrt(array[1] * array[1] + array[2] * array[2]))]
   distance = query_array_with_score[1]
@@ -65,29 +55,7 @@ def add_index_to_each_elem(array)
       array.sort!  #this makes it seem wrong but it saves resources
     array
 end
-#/publics
 
-def query_is_topic_format(array, topics)
-  stub_array = array
-
-  distance_coordinants = topics.each(&:shift)
-
-  distance_coordinants.map! {|x,y| [Math.sqrt(x*x + y*y)]}
-
-  scores = insert_query_scores(distance_coordinants)
-
-  indexed_scores = add_index_to_each_elem(scores)
-
-  final = indexed_scores.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
-  indexes = final.map! {|x| x[1]}
-
-  if indexes.length > stub_array[1]
-    indexes.slice!(stub_array[1])
-    print indexes
-  else
-    print indexes
-  end
-end
 
 def query_is_question_format(array, questions, question_topics)
     stub_array = array
@@ -142,54 +110,4 @@ def query_is_question_format(array, questions, question_topics)
     #print "mike"
 end
 
-stringify_input = $stdin.map {|x| x.to_s}
-stdin_input = stringify_input.map {|y| y.gsub(/[\n]+/, "")}
-
-#organize stdin
-params = stdin_input[0]
-params_arry = params.split(' ')
-topic_amount = params_arry[0].to_i
-q_amount = params_arry[1].to_i
-query_amount = params_arry[2].to_i
-
-topic_array = []
-x = 0
-while x < (topic_amount + 1)
-  topic_array.push(stdin_input[x])
-  x += 1
-end
-
-topic_array_len = topic_array.length
-remove_params = topic_array.slice!(0)
-
-question_array = []
-i = 0
-while i < (q_amount + topic_amount + 1)
-  question_array.push(stdin_input[i])
-  i += 1
-end
-
-remove_params_topics = question_array.slice!(topic_array_len..question_array.length)
-query_array = stdin_input.slice!((topic_array_len + remove_params_topics.length)..-1)
-
-#topic_array is your topic array
-#remove_params_topics is your question array
-#query_array is your query array 
-
-# convert the three objects to arrays
-topic_array_split = []
-topic_array.each {|x| topic_array_split.push(x.split(' '))}
-
-question_array_split = []
-remove_params_topics.each {|x| question_array_split.push(x.split(' '))}
-
-query_array_split = []
-query_array.each {|x| query_array_split.push(x.split(' '))}
-
-topic_integer_array = topic_and_Q_arrays_to_i(topic_array_split)
-question_integer_array = topic_and_Q_arrays_to_i(question_array_split)
-query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
-#route_query_array(query_array_mixed, topic_integer_array, question_integer_array, topic_array_split)
-print topic_integer_array
-#/arrayification
-
+print query_is_question_format(array, topics, topic_array)

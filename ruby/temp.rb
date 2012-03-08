@@ -1,14 +1,11 @@
-mike = [[[3, 3], [3, 2]], [[7, 5], [7, 2]], [[0.0, 1], [0.0, 0]], [[5, 4]]]
-
-y = 0
-while y < mike.length
-	if mike[y][0][0] == 0.0
-		josh = mike[y][0][0]
-		mike.unshift(josh)
+while i < query_array_mixed.length
+		if query_array_mixed[i][0] == "t"
+			query_is_topic_format(query_array_mixed[i], topic_integer_array)
+		else
+			query_is_question_format(query_array_mixed[i], question_integer_array, topic_array_split)
+		end
+		i += 1
 	end
-	y += 1
-	print mike
-end
 #remove_element_from_a(question_integer_array)
 #Each elem in stin is routed by eitther 't' or 'q' and piped into a huge function, the return is piped to standard out
 

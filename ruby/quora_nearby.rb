@@ -108,6 +108,8 @@ end
 
 #def query_is_topic_format(query_array_mixed)
 
+puts topic_integer_array[0][0].kind_of?(Integer)
+
 distance_coordinants = topic_integer_array.each(&:shift)
 
 distance_coordinants.map! {|x,y| [Math.sqrt(x*x + y*y)]}
@@ -117,15 +119,15 @@ scores = insert_query_scores(distance_coordinants)
 indexed_scores = add_index_to_each_elem(scores)
 
 final = indexed_scores.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
-#puts final
 
-indexes = final.map! {|x| x[1]}
-alan = ["t", 2, 0, 0]
 
-if indexes.length > alan[1]
-indexes.slice!(alan[1])
-print indexes
-else
-  print indexes
-end
+#indexes = final.map! {|x| x[1]}
+#alan = ["t", 2, 0, 0]
+
+#if indexes.length > alan[1]
+#indexes.slice!(alan[1])
+#print indexes
+#else
+  #print indexes
+#end
 
