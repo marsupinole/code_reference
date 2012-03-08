@@ -1,4 +1,17 @@
 #methods for both query formats(i.e public methods)
+def crazy_function(array)
+  array.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
+end
+
+def add_index_to_each_elem(array)
+      y = 0 
+      while y < array.length
+        low_score = array[y].push(y)
+      y += 1
+      end
+      array.sort!  #this makes it seem wrong but it saves resources
+end
+
 def topic_and_Q_arrays_to_i(array)
   y = 0
   while y < array.length
@@ -33,20 +46,17 @@ def shift_topics(array)
   array.each(&:shift) #=> [[0, 0], [1, 1], [2, 2]]
 end
 
-def crazy_function_topic(array)
-  array.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
-end
-
 def sift_Ids(array)
     array.map! {|x| x[1]}
 end
 
 def map_distance_coordinants(array)
-  array.map! {|x,y| [Math.sqrt(x*x + y*y)]}
+  array2 = array.map {|x,y| [Math.sqrt(x*x + y*y)]}
+  array2
 end
 
 def mix_query_array(array)
-  array.map! {|w,x,y,z| [w, x.to_i, y.to_i, z.to_i]}
+  array.map! {|w,x,y,z| [w, x.to_i, y.to_i, z.to_i]}  
 end
 
 def pythag_theorem(array)
@@ -65,16 +75,6 @@ def insert_query_scores(coordinants, array) #you have to pipe in array from the 
     coordinants
 end
 
-def add_index_to_each_elem(array)
-      y = 0 
-      while y < array.length
-        low_score = array[y].push(y)
-      y += 1
-      end
-      array.sort!  #this makes it seem wrong but it saves resources
-    array
-end
-
   stub_array = array
   
   distance_coordinants = shift_topics(query_topics)
@@ -85,7 +85,7 @@ end
 
   indexed_scores = add_index_to_each_elem(scores)
   
-  final = crazy_function_topic(indexed_scores)
+  final = crazy_function(indexed_scores)
 
   indexes = sift_Ids(final)
 
@@ -107,10 +107,6 @@ end
 
 def remove_singulars(array)
   array.delete_if {|x| x.length == 1 }
-end
-
-def crazy_function_question(array)
-  array.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
 end
 
 def map_final(array)
@@ -149,16 +145,6 @@ def insert_query_scores(coordinants, array) #you have to pipe in array from the 
         z += 1
       end
     coordinants
-end
-
-def add_index_to_each_elem(array)
-      y = 0 
-      while y < array.length
-        low_score = array[y].push(y)
-      y += 1
-      end
-      array.sort!  #this makes it seem wrong but it saves resources
-    array
 end
 
     stub_array = array
@@ -200,7 +186,7 @@ end
     
     rank_sans_empty = remove_singulars(rank)
     
-    final = crazy_function_question(rank_sans_empty)
+    final = crazy_function(rank_sans_empty)
 
     indexes = map_final(final)
 
@@ -212,7 +198,6 @@ end
       indexes.each {|x| print "#{x}" + ' ' }
       print "\n"
     end
-    $hen = [[0, 0, 0], [1, 1, 1], [2, 2, 2]]
 end
 
 stringify_input = $stdin.map {|x| x.to_s}

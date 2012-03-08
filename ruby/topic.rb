@@ -1,27 +1,22 @@
 array = ["t", 2, 0, 0]
 topics = [[0, 0, 0], [1, 1, 1], [2, 2, 2]] #topic integer array
 
-def topic_and_Q_arrays_to_i(array)
-  y = 0
-  while y < array.length
-    array[y].map! {|m| m.to_i}
-    y += 1
-  end
-  array
+def query_is_topic_format(array, topics)
+
+def shift_topics(array)
+	array.each(&:shift) #=> [[0, 0], [1, 1], [2, 2]]
 end
 
-def combine_distances_and_hash(array)
-  y = 0
-  while y < array.length
-    array[y].map! {|m| m.to_i}
-    y += 1
-  end
-  integer_array = array
-  integer_array.map! {|x,y,z| [x, Math.sqrt(y*y + z*z)]}
+def crazy_function_topic(array)
+	array.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
+end
 
-  flatten_array = integer_array.flatten!
-    pancake = Hash[*flatten_array]
-    pancake
+def sift_Ids(array)
+    array.map! {|x| x[1]}
+end
+
+def map_distance_coordinants(array)
+	array.map! {|x,y| [Math.sqrt(x*x + y*y)]}
 end
 
 def mix_query_array(array)
@@ -54,26 +49,40 @@ def add_index_to_each_elem(array)
     array
 end
 
-def query_is_topic_format(array, topics)
+def route_query_array(array, topics, questions, topic_array)
+	i = 0
+	while i < array.length
+		if array[i][0] == "t"
+			query_is_topic_format(array[i], topics)
+		else
+			query_is_question_format(array[i], questions, topic_array)
+    end
+		i += 1
+	end
+end
+
   stub_array = array
+  
+  distance_coordinants = shift_topics(topics)
 
-  distance_coordinants = topics.each(&:shift)  #=> [[0, 0], [1, 1], [2, 2]]
-
-  distance_coordinants.map! {|x,y| [Math.sqrt(x*x + y*y)]}
+  mapped_coordinanats = map_distance_coordinants(distance_coordinants)
 
   scores = insert_query_scores(distance_coordinants, array)
 
   indexed_scores = add_index_to_each_elem(scores)
+  
+  final = crazy_function_topic(indexed_scores)
 
-  final = indexed_scores.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
-  indexes = final.map! {|x| x[1]}
+  indexes = sift_Ids(final)
 
   if indexes.length > stub_array[1]
     indexes.slice!(stub_array[1])
-    print indexes
+    print indexes.join
+    print "\n"
   else
-    print indexes
+    print indexes.join
+    print "\n"
   end
 end
 
-print query_is_topic_format(array, topics)
+query_is_topic_format(array, topics)

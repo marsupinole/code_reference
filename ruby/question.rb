@@ -1,6 +1,24 @@
 array = ["q", 5, 100, 100]
-topics = [["0", "1", "0"], ["1", "2", "0", "1"], ["2", "3", "0", "1", "2"], ["3", "0"], ["4", "0"], ["5", "2", "1", "2"]]
-topic_array = [["0", "0.0", "0.0"], ["1", "1.0", "1.0"], ["2", "2.0", "2.0"]]
+topics = [[0, 1, 0], [1, 2, 0, 1], [2, 3, 0, 1, 2], [3, 0], [4, 0], [5, 2, 1, 2]]
+topic_array = [[0, 0.0, 0.0], [1, 1.0, 1.0], [2, 2.0, 2.0]]
+
+def query_is_question_format(array, questions, question_topics)
+
+def slice_questions(array) 
+	array.each {|n| n.slice!(0..1)}
+end
+
+def remove_singulars(array)
+	array.delete_if {|x| x.length == 1 }
+end
+
+def crazy_function_question(array)
+	array.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
+end
+
+def map_final(array)
+	array.map! {|x| x[1]}
+end
 
 def topic_and_Q_arrays_to_i(array)
   y = 0
@@ -30,20 +48,19 @@ def mix_query_array(array)
 end
 
 def pythag_theorem(array)
-  query_array_with_score = [array[0], (Math.sqrt(array[1] * array[1] + array[2] * array[2]))]
-  distance = query_array_with_score[1]
-  distance
+	query_array_with_score = [array[0], array[1], (Math.sqrt(array[2] * array[2] + array[3] * array[3]))]
+	distance = query_array_with_score[2]
+    distance
 end
 
-def insert_query_scores(array)
-  array_copy = array
+def insert_query_scores(coordinants, array) #you have to pipe in array from the top 
       mike = pythag_theorem(array)
       z = 0
-      while z < array_copy.length
-        array_copy[z].map! {|x| (mike - x).abs }
+      while z < coordinants.length
+        coordinants[z].map! {|x| (mike - x).abs }
         z += 1
       end
-    array_copy
+    coordinants
 end
 
 def add_index_to_each_elem(array)
@@ -56,8 +73,18 @@ def add_index_to_each_elem(array)
     array
 end
 
+def route_query_array(array, topics, questions, topic_array)
+	i = 0
+	while i < array.length
+		if array[i][0] == "t"
+			query_is_topic_format(array[i], topics)
+		else
+			query_is_question_format(array[i], questions, topic_array)
+    end
+		i += 1
+	end
+end
 
-def query_is_question_format(array, questions, question_topics)
     stub_array = array
 
     def get_single_score(elem)
@@ -81,7 +108,7 @@ def query_is_question_format(array, questions, question_topics)
         array
     end
 
-	  pare_q_array = questions.each {|n| n.slice!(0..1)}
+	pare_q_array = slice_questions(questions)
 
     topic_score_map = combine_distances_and_hash(question_topics)
     
@@ -89,25 +116,28 @@ def query_is_question_format(array, questions, question_topics)
 
     distance_scores = map_topic_score_question(pare_q_array)
 
-    query_minus_distance = insert_query_scores(distance_scores)
+    query_minus_distance = insert_query_scores(distance_scores, array)
     
     lowest_score = retain_lowest_score(query_minus_distance)
     
     rank = add_index_to_each_elem(lowest_score) 
     
-    rank_sans_empty = rank.delete_if {|x| x.length == 1 }
+    rank_sans_empty = remove_singulars(rank)
     
-    final = rank_sans_empty.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
-    indexes = final.map! {|x| x[1]}
+    final = crazy_function_question(rank_sans_empty)
+
+    indexes = map_final(final)
 
     if indexes.length > stub_array[1]
       indexes.slice!(stub_array[1])
-      print indexes
+      indexes.each {|x| print "#{x}" + ' ' }
+      #print indexes
+      print "\n"
     else
-      print indexes
+      indexes.each {|x| print "#{x}" + ' ' }
+      #print indexes
+      print "\n"
     end
-    #print "\n"
-    #print "mike"
 end
 
-print query_is_question_format(array, topics, topic_array)
+query_is_question_format(array, topics, topic_array)

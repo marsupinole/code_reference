@@ -1,26 +1,26 @@
-mike = [[0, 3, 4], [1, 20, 21], [2, 100, 100]]
+array = [[9, 2, 0, 0], [4, 1, 2, 2], [7, 1, 5, 5], [6, 1, 3, 1]]
+comments = [[0, 0, 0], [1, 1, 1], [2, 2, 2]] 
 
-query_array_split = [["t", "2", "0.0", "0.0"], ["q", "5", "100.0", "100.0"], ["q", "3", "4.0", "0.0"], ["t", "7", "4.0", "0.0"]]
+def input_is_comment_format(array, comments)
 
-def query_is_topic_format(array)
-	puts array[1].to_i
+def shift_comments(array)
+	array.each(&:shift) 
 end
 
-def query_is_question_format(array)
-	puts array[2].to_i
+def map_distance_coordinants(array)
+	array.map! {|x,y| [Math.sqrt(x*x + y*y)]}
 end
 
-def route_query_array(array)
-	i = 0
-	while i < array.length
-		if array[i][0] == "t"
-			query_is_topic_format(array[i])
-		else
-			query_is_question_format(array[i])
-		end
-		i += 1
-	end
+  distance_coordinants = shift_comments(comments)
+
+  mapped_coordinanats = map_distance_coordinants(distance_coordinants)
+
+  print mapped_coordinanats
+  print comments #=>[[0.0], [1.4142135623730951], [2.8284271247461903]]
 end
 
-
-route_query_array(query_array_split)
+i = 0
+while i < array.length
+  input_is_comment_format(array[i], comments)
+i += 1
+end
