@@ -4,7 +4,7 @@ def shift_topics(array)
   array.each(&:shift) #=> [[0, 0], [1, 1], [2, 2]]
 end
 
-def map_distance_coordinants(array)
+def map_distance_coordinates(array)
   array2 = array.map {|x,y| [Math.sqrt(x*x + y*y)]}
   array2
 end
@@ -61,14 +61,24 @@ def mix_query_array(array)
   array.map! {|w,x,y,z| [w, x.to_i, y.to_i, z.to_i]}
 end
 
-def route_query_array(array, questions, query_topics)
+def add_index_to_each_elem(array)
+      y = 0 
+      while y < array.length
+        low_score = array[y].push(y)
+      y += 1
+      end
+      array.sort!  #this makes it seem wrong but it saves resources
+    array
+end
+
+def route_query_array(array, topic_coordinates, topic_map, distance_scores)
   i = 0
   while i < array.length
     if array[i][0] == "t"
-      query_is_topic_format(array[i], query_topics)
+      query_is_topic_format(array[i], topic_coordinates, topic_map)
       #puts topics
     else
-      query_is_question_format(array[i], questions, query_topics)
+      query_is_question_format(array[i], distance_scores)
       #print array[1]
     end
     i += 1
@@ -76,7 +86,7 @@ def route_query_array(array, questions, query_topics)
 end
 #/publics
 
-def query_is_topic_format(array, query_topics)
+def query_is_topic_format(array, topic_coordinates, topic_map)
 
 def crazy_function_topic(array)
   array.group_by(&:first).values.sort.map!(&:reverse).flatten(1)
@@ -106,23 +116,9 @@ def insert_query_scores(coordinants, array) #you have to pipe in array from the 
     coordinants
 end
 
-def add_index_to_each_elem(array)
-      y = 0 
-      while y < array.length
-        low_score = array[y].push(y)
-      y += 1
-      end
-      array.sort!  #this makes it seem wrong but it saves resources
-    array
-end
-
   stub_array = array
-  
-  #distance_coordinants = shift_topics(query_topics)
 
-  #mapped_coordinanats = map_distance_coordinants(distance_coordinants)
-
-  scores = insert_query_scores(distance_coordinants, array)
+  scores = insert_query_scores(topic_coordinates, array)
 
   indexed_scores = add_index_to_each_elem(scores)
   
@@ -142,7 +138,7 @@ end
   end
 end
 
-def query_is_question_format(array, questions, question_topics)
+def query_is_question_format(array, distance_scores)
 
 def remove_singulars(array)
   array.delete_if {|x| x.length == 1 }
@@ -166,7 +162,7 @@ def pythag_theorem(array)
     distance
 end
 
-def insert_query_scores(coordinants, array) #you have to pipe in array from the top 
+def insert_query_scores(coordinants, array)  
       mike = pythag_theorem(array)
       z = 0
       while z < coordinants.length
@@ -176,32 +172,14 @@ def insert_query_scores(coordinants, array) #you have to pipe in array from the 
     coordinants
 end
 
-def add_index_to_each_elem(array)
-      y = 0 
-      while y < array.length
-        low_score = array[y].push(y)
-      y += 1
-      end
-      array.sort!  #this makes it seem wrong but it saves resources
-    array
-end
-
-    stub_array = array
-
     def retain_lowest_score(array)  #this is ugly!!!!
         array.each {|x| x.sort!}
         array.map! {|x| x.slice(0)}
         array.map! {|x| Array(x) }
         array
     end
-
-     #pare_q_array = slice_questions(questions)
-
-    #topic_score_map = combine_distances_and_hash(question_topics)
-    
-    #$global_topic_score = topic_score_map
-
-    distance_scores = map_topic_score_question(pare_q_array)
+  
+    stub_array = array  
 
     query_minus_distance = insert_query_scores(distance_scores, array)
     
@@ -270,15 +248,14 @@ query_array.each {|x| query_array_split.push(x.split(' '))}
 
 topic_integer_array = topic_and_Q_arrays_to_i(topic_array_split) #=> [[0, 0, 0], [1, 1, 1], [2, 2, 2]]
 remove_indexes = shift_topics(topic_integer_array) #=> [[0, 0], [1, 1], [2, 2]]
-mapped_coordinanats = map_distance_coordinants(remove_indexes) #=> [[0.0], [1.4142135623730951], [2.8284271247461903]]
+mapped_coordinates = map_distance_coordinates(remove_indexes) #=> [[0.0], [1.4142135623730951], [2.8284271247461903]]
 topic_integer_array2 = remake_integers(topic_array) #=> this is silly
 topic_score_map = combine_distances_and_hash(topic_integer_array2) #=>{0=>0.0, 1=>1.4142135623730951, 2=>2.8284271247461903}
 $global_topic_score = topic_score_map
 
 question_integer_array = topic_and_Q_arrays_to_i(question_array_split) #=> [[0, 1, 0], [1, 2, 0, 1], [2, 3, 0, 1, 2], [3, 0], [4, 0], [5, 2, 1, 2]]
 pare_q_array = slice_questions(question_integer_array) #=> [[0], [0, 1], [0, 1, 2], [], [], [1, 2]]
-distance_scores = map_topic_score_question(pare_q_array)
-#query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
+distance_scores = map_topic_score_question(pare_q_array)#=>[[0.0], [0.0, 1.4142135623730951], [0.0, 1.4142135623730951, 2.8284271247461903], [], [], [1.4142135623730951, 2.8284271247461903]]
+query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
 
-print distance_scores
-#route_query_array(query_array_mixed, question_integer_array, topic_integer_array)
+route_query_array(query_array_mixed, mapped_coordinates, topic_score_map, distance_scores)
