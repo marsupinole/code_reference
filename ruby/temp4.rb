@@ -1,35 +1,51 @@
-array = [[9, 2, 0, 0], [4, 1, 2, 2], [7, 1, 5, 5], [6, 1, 3, 1]]
-comments = [[0, 0, 0], [1, 1, 1], [2, 2, 2]] 
-u = 0
-big_array = []
-while u < array.length
-  big_array.push(comments.dup)
-  u += 1
+array = ["A", "C", "U", "P", "A", "D", "P", "L", "O", "T"] #1 3 1 3 1 2 3 
+
+class Array
+    def swap!(a,b)
+         self[a], self[b] = self[b], self[a]
+    self
+    end
 end
 
-def shift_comments(mike)
-	mike.each {|x| x.shift} 
+scrabble_hash = {"A" => 1, "E" => 1, "I" => 1, "L" => 1, "N" => 1, "O" => 1, "R" => 1, "S" => 1, "T" => 1, "U" => 1, "D" => 2, "G" => 2, "B" => 3, "C" => 3, "M" => 3, "P" => 3, "F" => 4, "H" => 4, "V" => 4, "W" => 4, "Y" => 4, "K" => 5, "J" => 8, "X" => 8, "Q" => 10, "Z" => 10}
+$global_hash = scrabble_hash
+
+def get_single_score(elem)
+      elem_value = $global_hash[elem]
+      elem_value
 end
 
-def map_distance_coordinants(alan)
-	array2 = alan.map {|x,y| [Math.sqrt(x*x + y*y)]}
-	array2
+def prevent_duplicates(a)
+  minimum = a.inject(Hash.new(0)) {|hash, val| hash[val] += 1; hash}.entries.max_by {|entry| entry.last}
+  if minimum[1] == 1
+  else
+  a.slice!(a.index(minimum[0]))
+    prevent_duplicates(a)
+  end
+  a
 end
 
-def input_is_comment_format(laj)
-
-  distance_coordinants = shift_comments(laj)
-
-  mapped_coordinanats = map_distance_coordinants(distance_coordinants)
-
-  print mapped_coordinanats
-   #=>[[0, 0], [1, 1], [2, 2]]
-  #comments = [[0, 0, 0], [1, 1, 1], [2, 2, 2]] 
+def check_for_even(array)
+  if array.length % 2 == 0
+    new_array = array.pop
+    array
+  else
+    array
+  end
 end
 
-i = 0
-while i < array.length
-	input_is_comment_format(big_array[i])
-  #array[i].map {|x| input_is_comment_format(big_array[i])}
-i += 1
+def check_and_sum(array)
+  
+  josh = prevent_duplicates(array)
+
+  alan = check_for_even(josh)  #=>[["B", "E", "O"], ["E", "A", "X"], ["P", "X", "I"], ["R", "E", "A"], ["Z", "S", "A"]]
+  
+  score_array = []
+
+  alan.map! {|x| get_single_score(x)}
+  alan.inject{|sum,x| sum + x}
+
+  
 end
+
+print check_and_sum(array)

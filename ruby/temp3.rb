@@ -1,6 +1,5 @@
 array = ["AD", "AX", "AY", "BO", "EX", "PI", "RA", "ZA"]
 
-
 class Array
     def swap!(a,b)
          self[a], self[b] = self[b], self[a]
@@ -39,7 +38,7 @@ end
   b
 end
 
-def find_scores(array)
+def shuffle_and_sum(array)
   mike = array.map! { |x| x.split(//) } #=> ["A", D"], ["A", X"], [..etc
   
   josh = prevent_duplicates(mike) #=> everything except the 'z, a'
