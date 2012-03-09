@@ -1,5 +1,4 @@
-array = ["AD", "AX", "AY", "BO", "EX", "PI", "RA", "ZA"]
-
+array = ["AHD", "ADX", "AVY", "BEO", "EAX", "PXI", "REA", "ZSA", "AYA", "ZSA"]
 
 class Array
     def swap!(a,b)
@@ -40,11 +39,11 @@ end
 end
 
 def find_scores(array)
-  mike = array.map! { |x| x.split(//) } #=> ["A", D"], ["A", X"], [..etc
+  mike = array.map! { |x| x.split(//) } #=> ["A", "H", "D"], ["A", "D", "X"], [..etc
   
-  josh = prevent_duplicates(mike) #=> everything except the 'z, a'
+  josh = prevent_duplicates(mike)
 
-  alan = sort_letters(josh)  #=>[[["A", "H"], ["A", "X"], ["A", "Y"]], ["B", "O"], ["E", "X"], ["P", "I"], ["R", "A"], ["Z", "A"]]
+  alan = sort_letters(josh)  #=>[["B", "E", "O"], ["E", "A", "X"], ["P", "X", "I"], ["R", "E", "A"], ["Z", "S", "A"]]
   
   i = 0
   tim = []
@@ -54,7 +53,7 @@ def find_scores(array)
       alan[i].map! {|x| get_single_score(x)}
       tim[i] = alan[i].inject{|sum,x| sum + x}
   else
-  	  alan[i].map! {|x| get_single_score(x)}
+      alan[i].map! {|x| get_single_score(x)}
       tim[i] = alan[i].inject{|sum,x| sum + x}
   end
     i += 1

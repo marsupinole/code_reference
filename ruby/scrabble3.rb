@@ -63,7 +63,7 @@ def find_scrabble_score(args)
     word_of_correct_len = []
     word_values = []
 
-  args.each {|x| x.upcase!}
+
     i = 0 
       while i < args.length
         if args[i].length == number_of_letters
@@ -71,7 +71,9 @@ def find_scrabble_score(args)
         
         end
         i += 1
-end
+    end
+
+  word_of_correct_len.each {|x| x.upcase!}
 
   if word_of_correct_len.empty?
     return 0
@@ -97,7 +99,8 @@ end
 end
  i += 1
 end
- add_word_values(value_arry)
+ #add_word_values(value_arry)
+ print str_to_array
 end
 
 #you need to use regular expressions
