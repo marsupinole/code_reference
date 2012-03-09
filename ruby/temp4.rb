@@ -1,5 +1,4 @@
 array = ["A", "C", "U", "P", "A", "D", "P", "L", "O", "T"] #1 3 1 3 1 2 3 
-
 class Array
     def swap!(a,b)
          self[a], self[b] = self[b], self[a]
@@ -26,8 +25,9 @@ def prevent_duplicates(a)
 end
 
 def check_for_even(array)
-  if array.length % 2 == 0
-    new_array = array.pop
+  if array.length % 2 == 0 
+    array.sort!
+    array.shift
     array
   else
     array
@@ -36,14 +36,12 @@ end
 
 def check_and_sum(array)
   
-  josh = prevent_duplicates(array)
+  elim_dups = prevent_duplicates(array)
 
-  alan = check_for_even(josh)  #=>[["B", "E", "O"], ["E", "A", "X"], ["P", "X", "I"], ["R", "E", "A"], ["Z", "S", "A"]]
+  ensure_odd = check_for_even(elim_dups)  #=>[["B", "E", "O"], ["E", "A", "X"], ["P", "X", "I"], ["R", "E", "A"], ["Z", "S", "A"]]
   
-  score_array = []
-
-  alan.map! {|x| get_single_score(x)}
-  alan.inject{|sum,x| sum + x}
+  ensure_odd.map! {|x| get_single_score(x)}
+  ensure_odd.inject{|sum,x| sum + x}
 
   
 end

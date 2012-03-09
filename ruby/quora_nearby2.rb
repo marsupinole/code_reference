@@ -42,7 +42,8 @@ def sift_Ids(array)
 end
 
 def map_distance_coordinants(array)
-  array.map! {|x,y| [Math.sqrt(x*x + y*y)]}
+  array2 = array.map {|x,y| [Math.sqrt(x*x + y*y)]}
+  array2
 end
 
 def mix_query_array(array)
@@ -91,9 +92,11 @@ end
 
   if indexes.length > stub_array[1]
     indexes.slice!(stub_array[1])
+    indexes.map! {|x| x.to_i}
     indexes.each {|x| print "#{x}" + ' ' }
     print "\n"
   else
+    indexes.map! {|x| x.to_i}
     indexes.each {|x| print "#{x}" + ' ' }
     print "\n"
   end
@@ -206,13 +209,14 @@ end
 
     if indexes.length > stub_array[1]
       indexes.slice!(stub_array[1])
+      indexes.map! {|x| x.to_i}
       indexes.each {|x| print "#{x}" + ' ' }
       print "\n"
     else
+      indexes.map! {|x| x.to_i}
       indexes.each {|x| print "#{x}" + ' ' }
       print "\n"
     end
-    $hen = [[0, 0, 0], [1, 1, 1], [2, 2, 2]]
 end
 
 stringify_input = $stdin.map {|x| x.to_s}
@@ -261,7 +265,3 @@ query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q"
 
 
 route_query_array(query_array_mixed, question_integer_array, topic_integer_array)
-#print topic_array_split
-#/arrayification
-#a = "5 2 1 0"
-#b = "0 1"

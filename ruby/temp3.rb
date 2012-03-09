@@ -39,30 +39,30 @@ end
 end
 
 def shuffle_and_sum(array)
-  mike = array.map! { |x| x.split(//) } #=> ["A", D"], ["A", X"], [..etc
+  split_array = array.map! { |x| x.split(//) } #=> ["A", D"], ["A", X"], [..etc
   
-  josh = prevent_duplicates(mike) #=> everything except the 'z, a'
+  elim_dups = prevent_duplicates(split_array) #=> everything except the 'z, a'
 
-  alan = sort_letters(josh)  #=>[[["A", "H"], ["A", "X"], ["A", "Y"]], ["B", "O"], ["E", "X"], ["P", "I"], ["R", "A"], ["Z", "A"]]
+  sort_arry = sort_letters(elim_dups)  #=>[[["A", "H"], ["A", "X"], ["A", "Y"]], ["B", "O"], ["E", "X"], ["P", "I"], ["R", "A"], ["Z", "A"]]
   
   i = 0
-  tim = []
-  while i < alan.length
-   if alan[i].class == Array
-      alan[i].flatten!
-      alan[i].map! {|x| get_single_score(x)}
-      tim[i] = alan[i].inject{|sum,x| sum + x}
+  score_array = []
+  while i < sort_arry.length
+   if sort_arry[i].class == Array
+      sort_arry[i].flatten!
+      sort_arry[i].map! {|x| get_single_score(x)}
+      score_array[i] = sort_arry[i].inject{|sum,x| sum + x}
   else
-  	  alan[i].map! {|x| get_single_score(x)}
-      tim[i] = alan[i].inject{|sum,x| sum + x}
+  	  sort_arry[i].map! {|x| get_single_score(x)}
+      score_array[i] = sort_arry[i].inject{|sum,x| sum + x}
   end
     i += 1
   end
-answer = tim.sort.pop
+answer = score_array.sort.pop
 answer
 end
 
-print find_scores(array)
+print shuffle_and_sum(array)
   #print john.inject{|sum,x| sum + x }
   #print "\n"
   #print alan[0]

@@ -1,37 +1,17 @@
-# Enter your code here. Read input from STDIN. Print output to STDOUT
-
-def add_word_values(arry)
-    x = 0
-    sum_arry = arry.map {|a| x = x + a }
-      if sum_arry.length > 1
-      final_sum = sum_arry.pop
-      final_sum
-  else 
-    sum_arry
-  end
-end
-
 scrabble_hash = {"A" => 1, "E" => 1, "I" => 1, "L" => 1, "N" => 1, "O" => 1, "R" => 1, "S" => 1, "T" => 1, "U" => 1, "D" => 2, "G" => 2, "B" => 3, "C" => 3, "M" => 3, "P" => 3, "F" => 4, "H" => 4, "V" => 4, "W" => 4, "Y" => 4, "K" => 5, "J" => 8, "X" => 8, "Q" => 10, "Z" => 10}
-#scrabble_hash.default = 0
+$global_hash = scrabble_hash
 
-def hash_lookup(string_val)
-    if string_val == "A" || string_val == "E" || string_val == "I" || string_val == "L" || string_val == "N" || string_val == "O"  || string_val == "R" || string_val == "S" || string_val == "T" || string_val == "U"
-      return 1
-    elsif string_val == "D" || string_val == "G" 
-      return 2
-    elsif string_val == "B" || string_val == "C" || string_val == "M" || string_val == "P"
-      return 3
-     elsif string_val =="F" || string_val == "H" || string_val == "V" || string_val == "W" || string_val == "Y"
-      return 4
-     elsif string_val == "K" 
-      return 5
-     elsif string_val == "J" || string_val == "X" 
-      return 8
-     else string_val == "Q" || string_val == "Z" 
-      return 10
-   end
+class Array
+    def swap!(a,b)
+         self[a], self[b] = self[b], self[a]
+    self
+    end
 end
 
+def get_single_score(elem)
+      elem_value = $global_hash[elem]
+      elem_value
+end
 
 def prevent_duplicates(a)
   minimum = a.inject(Hash.new(0)) {|hash, val| hash[val] += 1; hash}.entries.max_by {|entry| entry.last}
@@ -47,45 +27,63 @@ def sort_letters(arry)
   b = arry.group_by(&:first).values.map {|e| e.length > 1 ? e : e.flatten}
   x = 0
 while x < b.length
-  if b[x].length % 2 == 0 
+  if b[x].length % 4 == 0 
     b.delete_at(b.index(b[x])) 
   end
 x += 1
- 
 end
   b
 end
 
-def shuffle_and_sum
-    sort_words = word_of_correct_len.sort
+def check_for_even(array)
+  if array.length % 2 == 0 
+    array.sort!
+    array.shift
+    array
+  else
+    array
+  end
+end
 
-  str_to_array = sort_words.map! { |x| x.split(//) }
-  sorted_letters = sort_letters(prevent_duplicates(str_to_array))
-  lead_array = sorted_letters.shift
+def shuffle_and_sum(array)
+  split_array = array.map! { |x| x.split(//) } #=> ["A", D"], ["A", X"], [..etc
+  
+  elim_dups = prevent_duplicates(split_array) #=> everything except the 'z, a'
+
+  sort_arry = sort_letters(elim_dups)  #=>[[["A", "H"], ["A", "X"], ["A", "Y"]], ["B", "O"], ["E", "X"], ["P", "I"], ["R", "A"], ["Z", "A"]]
   
   i = 0
-  value_arry = []
-  while i < lead_array.length
-    if lead_array.length > 1
-      letter = lead_array[i].flatten
-      value = letter.each {|x| value_arry.push(hash_lookup(x))}
-    
-    else lead_array == 1
-      letter = lead_array[i]
-      value = letter.each {|x| value_arry.push(hash_lookup(x))}
-    end
- i += 1
+  score_array = []
+  while i < sort_arry.length
+   if sort_arry[i].class == Array
+      sort_arry[i].flatten!
+      sort_arry[i].map! {|x| get_single_score(x)}
+      score_array[i] = sort_arry[i].inject{|sum,x| sum + x}
+  else
+      sort_arry[i].map! {|x| get_single_score(x)}
+      score_array[i] = sort_arry[i].inject{|sum,x| sum + x}
   end
+    i += 1
+  end
+answer = score_array.sort.pop
+answer
+end
+
+def check_and_sum(array)
   
-  add_word_values(value_arry)
+  elim_dups = prevent_duplicates(array)
+
+  ensure_odd = check_for_even(elim_dups)  #=>[["B", "E", "O"], ["E", "A", "X"], ["P", "X", "I"], ["R", "E", "A"], ["Z", "S", "A"]]
+  
+  ensure_odd.map! {|x| get_single_score(x)}
+  ensure_odd.inject{|sum,x| sum + x}
+
 end
 
 def find_scrabble_score(args)
     number_of_letters = args[0].to_i
     args.shift[0] && args.shift[1]
     word_of_correct_len = []
-    word_values = []
-
 
     i = 0 
       while i < args.length
@@ -109,13 +107,7 @@ def find_scrabble_score(args)
     shuffle_and_sum(word_of_correct_len)
   end
   end
-#you need to use regular expressions
-#flatten is killing you - get rid of it
-#move upcase! like you thought you did
-#after sorting, you must see if adjacent elements differ by only one letter, if so, you check the other side
-#use permutations class iterate based on length of elements
-
-
+  
 stringify_input = $stdin.map {|x| x.to_s}
 strip_newlines = stringify_input.map {|y| y.gsub(/[\n]+/, "")}
 print find_scrabble_score(strip_newlines)
