@@ -187,7 +187,7 @@ end
         array
     end
 
-  pare_q_array = slice_questions(questions)
+     pare_q_array = slice_questions(questions)
 
     topic_score_map = combine_distances_and_hash(question_topics)
     
@@ -218,6 +218,7 @@ end
       print "\n"
     end
 end
+
 
 stringify_input = $stdin.map {|x| x.to_s}
 stdin_input = stringify_input.map {|y| y.gsub(/[\n]+/, "")}
@@ -259,9 +260,9 @@ query_array_split = []
 query_array.each {|x| query_array_split.push(x.split(' '))}
 
 
-topic_integer_array = topic_and_Q_arrays_to_i(topic_array_split)
+topic_integer_array = topic_and_Q_arrays_to_i(topic_array_split) #=> [[0, 0, 0], [1, 1, 1], [2, 2, 2]]
 question_integer_array = topic_and_Q_arrays_to_i(question_array_split)
 query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
 
-
-route_query_array(query_array_mixed, question_integer_array, topic_integer_array)
+print question_integer_array 
+#route_query_array(query_array_mixed, question_integer_array, topic_integer_array)

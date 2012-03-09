@@ -44,6 +44,6 @@ end
 
 if $0 == __FILE__
   ["a", "b", "c", "d"].perm(3) do |x|  
-    #p x
+    p x
   end
 end

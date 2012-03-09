@@ -108,13 +108,13 @@ end
         array
     end
 
-	pare_q_array = slice_questions(questions)
+	  pare_q_array = slice_questions(questions) #=> [[0], [0, 1], [0, 1, 2], [], [], [1, 2]]
 
-    topic_score_map = combine_distances_and_hash(question_topics)
+    topic_score_map = combine_distances_and_hash(question_topics) #=> {0=>0.0, 1=>1.4142135623730951, 2=>2.8284271247461903}
     
     $global_topic_score = topic_score_map
 
-    distance_scores = map_topic_score_question(pare_q_array)
+    distance_scores = map_topic_score_question(pare_q_array)#=>[[0.0], [0.0, 1.4142135623730951], [0.0, 1.4142135623730951, 2.8284271247461903], [], [], [1.4142135623730951, 2.8284271247461903]]
 
     query_minus_distance = insert_query_scores(distance_scores, array)
     

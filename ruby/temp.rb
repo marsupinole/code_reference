@@ -1,10 +1,28 @@
-a = [5, '', 2, '', 1, '', 0]
-b = [0, '', 1]
+array = [[9, 2], [4, 1], [7, 1], [6, 1]]
+comments = [[0, 0, 0], [1, 1, 1], [2, 2, 2]] 
 
-print b
-print "\n"
-print a
-print "\n"
+def shift_comments(array)
+  array.each {|x| x.shift} 
+end
+
+def map_distance_coordinants(array)
+  array.map {|x,y| [Math.sqrt(x*x + y*y)]}
+end
+
+def input_is_comment_format(comments)
+
+  distance_coordinants = shift_comments(comments)
+
+  mapped_coordinanats = map_distance_coordinants(distance_coordinants)
+
+  p mapped_coordinanats
+end
+
+i = 0
+while i < array.length
+  input_is_comment_format(comments)
+  i += 1
+end
 #remove_element_from_a(question_integer_array)
 #Each elem in stin is routed by eitther 't' or 'q' and piped into a huge function, the return is piped to standard out
 

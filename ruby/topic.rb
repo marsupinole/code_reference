@@ -63,11 +63,11 @@ end
 
   stub_array = array
   
-  distance_coordinants = shift_topics(topics)
+  distance_coordinants = shift_topics(topics) #=> [[0, 0], [1, 1], [2, 2]]
 
-  mapped_coordinanats = map_distance_coordinants(distance_coordinants)
+  mapped_coordinanats = map_distance_coordinants(distance_coordinants) #=> [[0.0], [1.4142135623730951], [2.8284271247461903]]
 
-  scores = insert_query_scores(distance_coordinants, array)
+  scores = insert_query_scores(distance_coordinants, array) #=> cutoff point same a above because it 0.0, 0.0
 
   indexed_scores = add_index_to_each_elem(scores)
   
