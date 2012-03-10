@@ -116,7 +116,7 @@ end
 
     distance_scores = map_topic_score_question(pare_q_array)#=>[[0.0], [0.0, 1.4142135623730951], [0.0, 1.4142135623730951, 2.8284271247461903], [], [], [1.4142135623730951, 2.8284271247461903]]
 
-    query_minus_distance = insert_query_scores(distance_scores, array)
+    query_minus_distance = insert_query_scores(distance_scores, array) #=> cutoff point
     
     lowest_score = retain_lowest_score(query_minus_distance)
     

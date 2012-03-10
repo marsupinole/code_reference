@@ -1,4 +1,4 @@
-array = ["t", 2, 0, 0]
+array = ["t", 2, 100, 100]
 topics = [[0, 0, 0], [1, 1, 1], [2, 2, 2]] #topic integer array
 
 def query_is_topic_format(array, topics)
@@ -67,7 +67,7 @@ end
 
   mapped_coordinanats = map_distance_coordinants(distance_coordinants) #=> [[0.0], [1.4142135623730951], [2.8284271247461903]]
 
-  scores = insert_query_scores(distance_coordinants, array) #=> cutoff point same a above because it 0.0, 0.0
+  scores = insert_query_scores(distance_coordinants, array) #=> cutoff point, same a above because it 0.0, 0.0
 
   indexed_scores = add_index_to_each_elem(scores)
   
