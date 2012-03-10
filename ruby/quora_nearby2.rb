@@ -20,7 +20,7 @@ def create_distance_scores(array)
   
   y = 0
   while y < question_array_split.length
-    question_array_split[y].map! {|m| m.to_i}
+    question_array_split[y].map!(&:to_i)
     y += 1
   end
   question_array_split.each {|n| n.slice!(0..1)}
@@ -48,7 +48,7 @@ end
 def combine_distances_and_hash(array)
   y = 0
   while y < array.length
-    array[y].map! {|m| m.to_i}
+    array[y].map!(&:to_i)
     y += 1
   end
   integer_array = array
@@ -62,7 +62,7 @@ end
 def topic_and_Q_arrays_to_i(array)
   y = 0
   while y < array.length
-    array[y].map! {|m| m.to_i}
+    array[y].map!(&:to_i)
     y += 1
   end
   array
@@ -247,12 +247,8 @@ $remove_params_topics2 = remove_params_topics
 topic_array_split = []
 topic_array.each {|x| topic_array_split.push(x.split(' '))}
 
-question_array_split = []
-remove_params_topics.each {|x| question_array_split.push(x.split(' '))}
-
 query_array_split = []
 query_array.each {|x| query_array_split.push(x.split(' '))}
-
 
 topic_integer_array = topic_and_Q_arrays_to_i(topic_array_split) #=> [[0, 0, 0], [1, 1, 1], [2, 2, 2]]
 remove_indexes = shift_topics(topic_integer_array) #=> [[0, 0], [1, 1], [2, 2]]
@@ -261,9 +257,7 @@ topic_integer_array2 = remake_integers(topic_array) #=> this is silly
 topic_score_map = combine_distances_and_hash(topic_integer_array2) #=>{0=>0.0, 1=>1.4142135623730951, 2=>2.8284271247461903}
 $global_topic_score = topic_score_map
 
-question_integer_array = topic_and_Q_arrays_to_i(question_array_split) #=> [[0, 1, 0], [1, 2, 0, 1], [2, 3, 0, 1, 2], [3, 0], [4, 0], [5, 2, 1, 2]]
-pare_q_array = slice_questions(question_integer_array) #=> [[0], [0, 1], [0, 1, 2], [], [], [1, 2]]
-distance_scores = map_topic_score_question(pare_q_array)#=>[[0.0], [0.0, 1.4142135623730951], [0.0, 1.4142135623730951, 2.8284271247461903], [], [], [1.4142135623730951, 2.8284271247461903]]
+distance_scores = create_distance_scores(remove_params_topics)
 
 query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
 route_query_array(query_array_mixed, mapped_coordinates, topic_score_map, distance_scores)
