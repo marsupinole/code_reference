@@ -88,7 +88,7 @@ class WordSteps
     # length in length_range from the file file_name
     def self.load_from_file(file_name, length_range)
         word_steps = new
-        IO.foreach(file_name) do |line|
+        file_name.each do |line|
             # only load words with correct length
             if length_range === (word = line.strip).length
                 word_steps.add_word(word.downcase)
@@ -98,21 +98,22 @@ class WordSteps
     end
 end
 
+def find_scrabble_score(args)
+    number_of_letters = args[0].to_i
+    args.shift[0] && args.shift[1]
+    word_of_correct_len = []
 
-if $0 == __FILE__
-    #stringify_input = $stdin.map {|x| x.to_s}
-    dictionary = DEFAULT_DICTIONARY
+    i = 0 
+      while i < args.length
+        if args[i].length == number_of_letters
+          word_of_correct_len.push(args[i])
+        end
+        i += 1
+    end
 
-    # parse arguments
-    if ARGV[0] == "-d"
-        ARGV.shift
-        dictionary = ARGV.shift
-    end
-    unless ARGV.size == 2
-        puts "usage: #$0 [-d path/to/dictionary] word1 word2"
-        exit 1
-    end
-    word1, word2 = ARGV[0].strip.downcase, ARGV[1].strip.downcase
+    word1 = word_of_correct_len[0].strip.downcase
+    word2 = word_of_correct_len[5].strip.downcase
+    dictionary = $stdin
 
     shorter = word1.length > word2.length
     longer = word1.length < word2.length
@@ -122,15 +123,15 @@ if $0 == __FILE__
         word2.length..word1.length
     end
 
-    # read dictionary
-    warn "Loading dictionary..." if $DEBUG
     word_steps = WordSteps.load_from_file(dictionary, length_range)
     word_steps.add_word(word2) # if it is not in dictionary
 
-    # build chain
-    warn "Building chain..." if $DEBUG
     chain = word_steps.build_word_chain(word1, word2, shorter, longer)
 
     # print result
     puts chain || "No chain found!"
 end
+
+    stringify_input = $stdin.map {|x| x.to_s}
+    mike = stringify_input.map {|y| y.gsub(/[\n]+/, "")}
+    find_scrabble_score(mike)

@@ -26,7 +26,7 @@ class WordSteps
     # if allow_shorter is true, word[0..-2].to_sym will also be yielded if
     # available
     # if allow_longer is true, all words that match /#{word}./ will be yielded
-    def each_possible_step(word, allow_shorter = false, allow_longer = false)
+    def each_possible_step(word)
         wdup = word.dup
         for i in 0...word.length
             wdup[i] = 0
@@ -35,10 +35,10 @@ class WordSteps
             end
             wdup[i] = word[i]
         end
-        if allow_shorter && @words.has_key?(tmp = word[0..-2])
+        if @words.has_key?(tmp = word[0..-2])
             yield @words[tmp]
         end
-        if allow_longer && @steps.has_key?(tmp = word + "\0")
+        if @steps.has_key?(tmp = word + "\0")
             @steps[tmp].each { |step| yield step }
         end
     end
@@ -48,7 +48,7 @@ class WordSteps
     # returns the chain as array of symbols or nil, if no chain is found
     # shorter/longer determines if shorter or longer words are allowed in the
     # chain
-    def build_word_chain(word1, word2, shorter = false, longer = false)
+    def build_word_chain(word1, word2)
         # build chain with simple breadth first search
         current = [word1.to_sym]
         pre = { current[0] => nil } # will contain the predecessors
@@ -57,7 +57,7 @@ class WordSteps
             until current.empty?
                 next_step = []
                 current.each do |csym|
-                    each_possible_step(csym.to_s, shorter, longer) do |ssym|
+                    each_possible_step(csym.to_s) do |ssym|
                         # have we seen this word before?
                         unless pre.has_key? ssym
                             pre[ssym] = csym
@@ -75,19 +75,6 @@ class WordSteps
         chain << target while target = pre[target]
         chain.reverse
     end
-
-    # builds and returns a WordSteps instance "containing" all words with
-    # length in length_range from the file file_name
-    def self.load_from_file(file_name, length_range)
-        word_steps = new
-        IO.foreach(file_name) do |line|
-            # only load words with correct length
-            if length_range === (word = line.strip).length
-                word_steps.add_word(word.downcase)
-            end
-        end
-        word_steps
-    end
 end
 
 def find_scrabble_score(args)
@@ -103,27 +90,14 @@ def find_scrabble_score(args)
         i += 1
     end
 
-    dictionary = word_of_correct_len
-    word1, word2 = word_of_correct_len[0], word_of_correct_len[1]
+    word1 = word_of_correct_len[0]
+    word2 = word_of_correct_len[2]
 
-    shorter = word1.length > word2.length
-    longer = word1.length < word2.length
-    length_range = if longer
-        word1.length..word2.length
-    else
-        word2.length..word1.length
-    end
-
-    # read dictionary
-    warn "Loading dictionary..." if $DEBUG
     word_steps = WordSteps.new
     word_steps.add_word(word2) # if it is not in dictionary
 
-    # build chain
-    warn "Building chain..." if $DEBUG
-    chain = word_steps.build_word_chain(word1, word2, shorter, longer)
+    chain = word_steps.build_word_chain(word1, word2)
 
-    # print result
     puts chain || "No chain found!"
 end
 
