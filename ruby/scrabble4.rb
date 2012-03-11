@@ -1,68 +1,93 @@
-array = ["ABA", "BBC", "DDI", "NMI", "ORG"]
+class WordSteps
+    def initialize
+        @steps = Hash.new { |h, k| h[k] = [] }
+        @words = {}
+    end
 
-class Array
-    def swap!(a,b)
-         self[a], self[b] = self[b], self[a]
-    self
+    def each_word(&block)
+        @words.each_key(&block)
+    end
+
+    def add_word(word)
+        sym = word.to_sym
+        wdup = word.dup
+        for i in 0...word.length
+            wdup[i] = 0
+            @steps[wdup] << sym
+            wdup[i] = word[i]
+        end
+        @words[word] = sym 
+    end
+
+    def each_possible_step(word)
+        wdup = word.dup
+        for i in 0...word.length
+            wdup[i] = 0
+            if @steps.has_key?(wdup)
+                @steps[wdup].each { |step| yield step }
+            end
+            wdup[i] = word[i]
+        end
+        if @words.has_key?(tmp = word[0..-2])
+            yield @words[tmp]
+        end
+        if @steps.has_key?(tmp = word + "\0")
+            @steps[tmp].each { |step| yield step }
+        end
+    end
+
+    def build_word_chain(word1, word2)
+        current = [word1.to_sym]
+        pre = { current[0] => nil } 
+        target = word2.to_sym
+        catch(:done) do
+            until current.empty?
+                next_step = []
+                current.each do |csym|
+                    each_possible_step(csym.to_s) do |ssym|
+                        unless pre.has_key? ssym
+                            pre[ssym] = csym
+                            throw(:done) if ssym == target
+                            next_step << ssym
+                        end
+                    end
+                end
+                current = next_step
+            end
+            return nil 
+        end
+
+        chain = [target]
+        chain << target while target = pre[target]
+        chain.reverse
+    end
+
+    def self.load_from_file(file_name)
+        word_steps = new
+        file_name.each do |line|
+            word = line.strip
+            word_steps.add_word(word.upcase)
+        end
+        word_steps
     end
 end
 
-scrabble_hash = {"A" => 1, "E" => 1, "I" => 1, "L" => 1, "N" => 1, "O" => 1, "R" => 1, "S" => 1, "T" => 1, "U" => 1, "D" => 2, "G" => 2, "B" => 3, "C" => 3, "M" => 3, "P" => 3, "F" => 4, "H" => 4, "V" => 4, "W" => 4, "Y" => 4, "K" => 5, "J" => 8, "X" => 8, "Q" => 10, "Z" => 10}
-$global_hash = scrabble_hash
-
-def get_single_score(elem)
-      elem_value = $global_hash[elem]
-      elem_value
-end
-
-def prevent_duplicates(a)
-  minimum = a.inject(Hash.new(0)) {|hash, val| hash[val] += 1; hash}.entries.max_by {|entry| entry.last}
-  if minimum[1] == 1
-  else
-  a.slice!(a.index(minimum[0]))
-    prevent_duplicates(a)
-  end
-  a
-end
-
-def sort_letters(arry)
-  b = arry.group_by(&:first).values.map {|e| e.length > 1 ? e : e.flatten}
-  x = 0
-while x < b.length
-  if b[x].length % 4 == 0 
-    b.delete_at(b.index(b[x])) 
-  end
-x += 1
- 
-end
-  b
-end
+array = ["DUCK", "RUBE", "RUBY", "RUCK", "RUSE", "RUSK", "SAME"]
 
 def shuffle_and_sum(array)
-  split_array = array.map! { |x| x.split(//) } #=> ["A", D"], ["A", X"], [..etc
-  
-  elim_dups = prevent_duplicates(split_array) #=> everything except the 'z, a'
-
-  sort_arry = sort_letters(elim_dups)  #=>[[["A", "H"], ["A", "X"], ["A", "Y"]], ["B", "O"], ["E", "X"], ["P", "I"], ["R", "A"], ["Z", "A"]]
-  
+  array.sort!
+  first = array[0]
+  word_steps = WordSteps.load_from_file(array)
+  chains_array = []
   i = 0
-  score_array = []
-  while i < sort_arry.length
-   if sort_arry[i].class == Array
-      sort_arry[i].flatten!
-      sort_arry[i].map! {|x| get_single_score(x)}
-      score_array[i] = sort_arry[i].inject{|sum,x| sum + x}
-  else
-      sort_arry[i].map! {|x| get_single_score(x)}
-      score_array[i] = sort_arry[i].inject{|sum,x| sum + x}
-  end
+  while i < array.length
+    chain = word_steps.build_word_chain(first, array[i])
+    if chain
+      chains_array.push(chain)
+    end
     i += 1
   end
-answer = score_array.sort.pop
-answer
+  puts chains_array
 end
 
-print shuffle_and_sum(array)
-  #print john.inject{|sum,x| sum + x }
-  #print "\n"
-  #print alan[0]
+shuffle_and_sum(array)

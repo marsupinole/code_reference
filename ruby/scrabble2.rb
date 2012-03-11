@@ -46,12 +46,18 @@ def check_for_even(array)
 end
 
 def shuffle_and_sum(array)
+  first = array[0]
+  last = array[array.length]
+  #find_word_chain(first, last)
+
+  # sort and ask for word chain[0..array.length], if word chain found, then push into array
   split_array = array.map! { |x| x.split(//) } #=> ["A", D"], ["A", X"], [..etc
   
   elim_dups = prevent_duplicates(split_array) #=> everything except the 'z, a'
 
   sort_arry = sort_letters(elim_dups)  #=>[[["A", "H"], ["A", "X"], ["A", "Y"]], ["B", "O"], ["E", "X"], ["P", "I"], ["R", "A"], ["Z", "A"]]
   
+
   i = 0
   score_array = []
   while i < sort_arry.length
@@ -72,6 +78,8 @@ end
 def check_and_sum(array)
   
   elim_dups = prevent_duplicates(array)
+
+  #find smallest score then eleminate even based on smallest
 
   ensure_odd = check_for_even(elim_dups)  #=>[["B", "E", "O"], ["E", "A", "X"], ["P", "X", "I"], ["R", "E", "A"], ["Z", "S", "A"]]
   
@@ -104,6 +112,7 @@ def find_scrabble_score(args)
   if word_of_correct_len[0].length == 1
     check_and_sum(word_of_correct_len)
   else
+    #print word_of_correct_len
     shuffle_and_sum(word_of_correct_len)
   end
   end

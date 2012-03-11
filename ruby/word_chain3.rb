@@ -85,16 +85,21 @@ def find_scrabble_score(args)
         i += 1
     end
 
-    word1 = word_of_correct_len[0].strip.downcase
-    word2 = word_of_correct_len[5].strip.downcase
+    word1 = word_of_correct_len[0]
+    word2 = word_of_correct_len[5]
 
 
     word_steps = WordSteps.load_from_file(word_of_correct_len)
-    word_steps.add_word(word2) 
+    #word_steps.add_word(word2) 
 
     chain = word_steps.build_word_chain(word1, word2)
-
-    puts chain || "No chain found!"
+    john = []
+    if chain 
+        john.push(chain)
+        print john
+    else
+        print 'nope'
+    end
 end
 
     stringify_input = $stdin.map {|x| x.to_s}
