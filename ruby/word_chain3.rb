@@ -4,12 +4,10 @@ class WordSteps
         @words = {}
     end
 
-    # yields all words (as strings) that were added with add_word
     def each_word(&block)
         @words.each_key(&block)
     end
 
-    # add all steps for word (a string) to the steps
     def add_word(word)
         sym = word.to_sym
         wdup = word.dup
@@ -18,14 +16,9 @@ class WordSteps
             @steps[wdup] << sym
             wdup[i] = word[i]
         end
-        @words[word] = sym # for allow_shorter and each_word
+        @words[word] = sym 
     end
 
-    # yields each possible next step for word (a string) as symbol, some
-    # possible steps might be yielded multiple times
-    # if allow_shorter is true, word[0..-2].to_sym will also be yielded if
-    # available
-    # if allow_longer is true, all words that match /#{word}./ will be yielded
     def each_possible_step(word)
         wdup = word.dup
         for i in 0...word.length
@@ -43,22 +36,15 @@ class WordSteps
         end
     end
 
-    # tries to find a word chain between word1 and word2 (strings) using all
-    # available steps
-    # returns the chain as array of symbols or nil, if no chain is found
-    # shorter/longer determines if shorter or longer words are allowed in the
-    # chain
     def build_word_chain(word1, word2)
-        # build chain with simple breadth first search
         current = [word1.to_sym]
-        pre = { current[0] => nil } # will contain the predecessors
+        pre = { current[0] => nil } 
         target = word2.to_sym
         catch(:done) do
             until current.empty?
                 next_step = []
                 current.each do |csym|
                     each_possible_step(csym.to_s) do |ssym|
-                        # have we seen this word before?
                         unless pre.has_key? ssym
                             pre[ssym] = csym
                             throw(:done) if ssym == target
@@ -68,12 +54,21 @@ class WordSteps
                 end
                 current = next_step
             end
-            return nil # no chain found
+            return nil 
         end
-        # build the chain (in reverse order)
+
         chain = [target]
         chain << target while target = pre[target]
         chain.reverse
+    end
+
+    def self.load_from_file(file_name)
+        word_steps = new
+        file_name.each do |line|
+            word = line.strip
+            word_steps.add_word(word.downcase)
+        end
+        word_steps
     end
 end
 
@@ -90,11 +85,12 @@ def find_scrabble_score(args)
         i += 1
     end
 
-    word1 = word_of_correct_len[0]
-    word2 = word_of_correct_len[2]
+    word1 = word_of_correct_len[0].strip.downcase
+    word2 = word_of_correct_len[5].strip.downcase
 
-    word_steps = WordSteps.new
-    word_steps.add_word(word2) # if it is not in dictionary
+
+    word_steps = WordSteps.load_from_file(word_of_correct_len)
+    word_steps.add_word(word2) 
 
     chain = word_steps.build_word_chain(word1, word2)
 
@@ -102,5 +98,5 @@ def find_scrabble_score(args)
 end
 
     stringify_input = $stdin.map {|x| x.to_s}
-    dictionary = stringify_input.map {|y| y.gsub(/[\n]+/, "")}
-    find_scrabble_score(dictionary)
+    mike = stringify_input.map {|y| y.gsub(/[\n]+/, "")}
+    find_scrabble_score(mike)

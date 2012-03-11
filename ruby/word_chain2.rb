@@ -112,7 +112,7 @@ def find_scrabble_score(args)
     end
 
     word1 = word_of_correct_len[0].strip.downcase
-    word2 = word_of_correct_len[2].strip.downcase
+    word2 = word_of_correct_len[5].strip.downcase
     dictionary = $stdin
 
     shorter = word1.length > word2.length
