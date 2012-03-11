@@ -89,7 +89,8 @@ class WordSteps
     def self.load_from_file(file_name, length_range)
         word_steps = new
         file_name.each do |line|
-            # only load words with correct length
+            word_array = []
+            word_array.push(line)
             if length_range === (word = line.strip).length
                 word_steps.add_word(word.downcase)
             end
@@ -100,6 +101,10 @@ end
 
 
     dictionary = $stdin
+
+
+    #word1 = word_of_correct_len[0].strip.downcase
+    #word2 = word_of_correct_len[5].strip.downcase
 
     word1, word2 = "duck", "ruby"
 

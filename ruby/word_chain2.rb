@@ -112,7 +112,7 @@ def find_scrabble_score(args)
     end
 
     word1 = word_of_correct_len[0].strip.downcase
-    word2 = word_of_correct_len[5].strip.downcase
+    word2 = word_of_correct_len[2].strip.downcase
     dictionary = $stdin
 
     shorter = word1.length > word2.length
@@ -123,7 +123,7 @@ def find_scrabble_score(args)
         word2.length..word1.length
     end
 
-    word_steps = WordSteps.load_from_file(dictionary, length_range)
+    word_steps = WordSteps.load_from_file(word_of_correct_len, length_range)
     word_steps.add_word(word2) # if it is not in dictionary
 
     chain = word_steps.build_word_chain(word1, word2, shorter, longer)
