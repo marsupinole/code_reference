@@ -77,7 +77,7 @@ def reduce_even_arrays(array)
 end
 
 def flatten_and_sum(array)
-    #puts 'hello'
+    print array
 end
 
 array = ["DUCK", "RUBE", "RUBY", "RUCK", "RUSE", "RUSK", "SAME"]
@@ -91,26 +91,23 @@ def shuffle_and_sum(array)
   while i < array.length
     chain = word_steps.build_word_chain(first, array[i])
     if chain
-      chains_array.push(chain)
+      chains_array.push(chain) #=>DUCKRUCKRUSKRUSERUBEDUCKRUCKRUSKRUSERUBERUBYDUCKRUCKDUCKRUCKRUSKRUSEDUCKRUCKRUSK
     end
     i += 1
   end
 
-
-
 w = 0
 even_arrays = []
+odds_arrays = []
 while w < chains_array.length
     if chains_array[w].length % 2 == 0
-        even_arrays.push(chains_array[w])
+        even_arrays.push(chains_array[w])  #=>DUCKRUCKRUSKRUSERUBERUBYDUCKRUCKDUCKRUCKRUSKRUSE
     else
-        flatten_and_sum(chains_array[w])
+        odds_arrays.push(chains_array[w])  #=>DUCKRUCKRUSKRUSERUBEDUCKRUCKRUSK
     end
     w += 1
 end
-puts even_arrays[3]
-  #for each elem in chains_array, first check if odd, if so, flatten and sum, if even, find score for each elem, sort
-  #and shift and sum, then for new chains_array, sort, sum, and shift 
+ print odds_arrays
 end
 
 shuffle_and_sum(array)
