@@ -84,6 +84,7 @@ def split_words(array2)
   array2
 end
 
+
 def get_single_score(elem)
       elem_value = $global_hash[elem]
       elem_value
@@ -141,10 +142,37 @@ def reduce_even_arrays(array)
     c += 1
   end #=> [[11, 10], [8, 4, 9]]
 
+array.map!(&:sort)
+array.map!(&:shift)
+
+array.sort!
+array_value = array.pop
+array_value
+
 end
 
 def flatten_and_sum(array)
-    #print array
+    
+    i = 0
+    while i < array.length
+        array[i].map!(&:to_s)
+        i += 1
+    end
+
+    i = 0
+    while i < array.length
+        array[i].map!{|x| x.split(' ')}
+        i += 1
+    end
+
+   v = 0
+    while v < array.length
+      split_words(array[v])
+      v += 1 
+    end
+  array.map!{|x| x.flatten!}
+
+#map letters to number, sort, shift
 end
 
 array = ["DUCK", "RUBE", "RUBY", "RUCK", "RUSE", "RUSK", "SAME"]
@@ -176,8 +204,9 @@ while w < chains_array.length
     end
     w += 1
 end
- reduce_even_arrays(even_arrays)
+ #reduce_even_arrays(even_arrays)
  #flatten_and_sum(odds_arrays)
+ print odds_arrays[0][0]
 end
 
 shuffle_and_sum(array)
