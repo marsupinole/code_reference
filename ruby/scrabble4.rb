@@ -93,10 +93,19 @@ end
 def map_letters_to_scores(array)
     r = 0
     while r < array.length
-        get_single_score(array[r])
+        array[r].map! {|x| get_single_score(x)}
         r += 1
     end
     array
+end
+
+def sum_elements(array)
+    i = 0
+    while i < array.length
+        array[i] = array[i].inject{|sum,x| sum + x}
+        i += 1
+   end
+   array
 end
 
 def reduce_even_arrays(array)
@@ -122,10 +131,16 @@ def reduce_even_arrays(array)
   
   w = 0
   while w < array.length
-    map_letters_to_scores(array[w])
+    map_letters_to_scores(array[w]) 
     w += 1
-  end
- # now add the numbers together for each element 
+  end #=> [[[2, 1, 3, 5], [1, 1, 3, 5]], [[1, 1, 1, 5], [1, 1, 1, 1], [1, 1, 3, 4]]]
+ 
+ c = 0
+ while c < array.length
+    sum_elements(array[c])
+    c += 1
+  end #=> [[11, 10], [8, 4, 9]]
+
 end
 
 def flatten_and_sum(array)
