@@ -1,3 +1,6 @@
+scrabble_hash = {"A" => 1, "E" => 1, "I" => 1, "L" => 1, "N" => 1, "O" => 1, "R" => 1, "S" => 1, "T" => 1, "U" => 1, "D" => 2, "G" => 2, "B" => 3, "C" => 3, "M" => 3, "P" => 3, "F" => 4, "H" => 4, "V" => 4, "W" => 4, "Y" => 4, "K" => 5, "J" => 8, "X" => 8, "Q" => 10, "Z" => 10}
+$global_hash = scrabble_hash
+
 class WordSteps
     def initialize
         @steps = Hash.new { |h, k| h[k] = [] }
@@ -72,12 +75,61 @@ class WordSteps
     end
 end
 
-def reduce_even_arrays(array)
+def split_words(array2)
+  n = 0
+  while n < array2.length
+    array2[n].map!{|x| x.split(//)}
+    n += 1
+  end
+  array2
+end
+
+def get_single_score(elem)
+      elem_value = $global_hash[elem]
+      elem_value
+end
+
+
+def map_letters_to_scores(array)
+    r = 0
+    while r < array.length
+        get_single_score(array[r])
+        r += 1
+    end
     array
 end
 
+def reduce_even_arrays(array)
+    y = 0
+    while y < array.length
+        array[y].map!(&:to_s)
+        y += 1
+    end
+
+    i = 0
+    while i < array.length
+        array[i].map!{|x| x.split(' ')}
+        i += 1
+    end
+
+    v = 0
+    while v < array.length
+      split_words(array[v])
+      v += 1 
+    end
+  
+  array.map!{|x| x.flatten(1)}#=> [[["D", "U", "C", "K"], ["R", "U", "C", "K"]], [["R", "U", "S", "K"], ["R", "U", "S", "E"]]
+  
+  w = 0
+  while w < array.length
+    map_letters_to_scores(array[w])
+    w += 1
+  end
+ # now add the numbers together for each element 
+end
+
 def flatten_and_sum(array)
-    print array
+    #print array
 end
 
 array = ["DUCK", "RUBE", "RUBY", "RUCK", "RUSE", "RUSK", "SAME"]
@@ -96,6 +148,8 @@ def shuffle_and_sum(array)
     i += 1
   end
 
+#chains_array.map!(&:to_s)
+
 w = 0
 even_arrays = []
 odds_arrays = []
@@ -107,7 +161,8 @@ while w < chains_array.length
     end
     w += 1
 end
- print odds_arrays
+ reduce_even_arrays(even_arrays)
+ #flatten_and_sum(odds_arrays)
 end
 
 shuffle_and_sum(array)
