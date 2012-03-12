@@ -72,6 +72,14 @@ class WordSteps
     end
 end
 
+def reduce_even_arrays(array)
+    array
+end
+
+def flatten_and_sum(array)
+    #puts 'hello'
+end
+
 array = ["DUCK", "RUBE", "RUBY", "RUCK", "RUSE", "RUSK", "SAME"]
 
 def shuffle_and_sum(array)
@@ -87,7 +95,22 @@ def shuffle_and_sum(array)
     end
     i += 1
   end
-  puts chains_array
+
+
+
+w = 0
+even_arrays = []
+while w < chains_array.length
+    if chains_array[w].length % 2 == 0
+        even_arrays.push(chains_array[w])
+    else
+        flatten_and_sum(chains_array[w])
+    end
+    w += 1
+end
+puts even_arrays[3]
+  #for each elem in chains_array, first check if odd, if so, flatten and sum, if even, find score for each elem, sort
+  #and shift and sum, then for new chains_array, sort, sum, and shift 
 end
 
 shuffle_and_sum(array)
