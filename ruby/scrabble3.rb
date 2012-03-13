@@ -1,68 +1,221 @@
-# Enter your code here. Read input from STDIN. Print output to STDOUT
-
-def add_word_values(arry)
-    x = 0
-    sum_arry = arry.map {|a| x = x + a }
-      if sum_arry.length > 1
-      final_sum = sum_arry.pop
-      final_sum
-  else 
-    sum_arry
-  end
-end
-
 scrabble_hash = {"A" => 1, "E" => 1, "I" => 1, "L" => 1, "N" => 1, "O" => 1, "R" => 1, "S" => 1, "T" => 1, "U" => 1, "D" => 2, "G" => 2, "B" => 3, "C" => 3, "M" => 3, "P" => 3, "F" => 4, "H" => 4, "V" => 4, "W" => 4, "Y" => 4, "K" => 5, "J" => 8, "X" => 8, "Q" => 10, "Z" => 10}
-#scrabble_hash.default = 0
+$global_hash = scrabble_hash
 
-def hash_lookup(string_val)
-    if string_val == "A" || string_val == "E" || string_val == "I" || string_val == "L" || string_val == "N" || string_val == "O"  || string_val == "R" || string_val == "S" || string_val == "T" || string_val == "U"
-      return 1
-    elsif string_val == "D" || string_val == "G" 
-      return 2
-    elsif string_val == "B" || string_val == "C" || string_val == "M" || string_val == "P"
-      return 3
-     elsif string_val =="F" || string_val == "H" || string_val == "V" || string_val == "W" || string_val == "Y"
-      return 4
-     elsif string_val == "K" 
-      return 5
-     elsif string_val == "J" || string_val == "X" 
-      return 8
-     else string_val == "Q" || string_val == "Z" 
-      return 10
+class WordSteps
+    def initialize
+        @steps = Hash.new { |h, k| h[k] = [] }
+        @words = {}
+    end
+
+    def each_word(&block)
+        @words.each_key(&block)
+    end
+
+    def add_word(word)
+        sym = word.to_sym
+        wdup = word.dup
+        for i in 0...word.length
+            wdup[i] = 0
+            @steps[wdup] << sym
+            wdup[i] = word[i]
+        end
+        @words[word] = sym 
+    end
+
+    def each_possible_step(word)
+        wdup = word.dup
+        for i in 0...word.length
+            wdup[i] = 0
+            if @steps.has_key?(wdup)
+                @steps[wdup].each { |step| yield step }
+            end
+            wdup[i] = word[i]
+        end
+        if @words.has_key?(tmp = word[0..-2])
+            yield @words[tmp]
+        end
+        if @steps.has_key?(tmp = word + "\0")
+            @steps[tmp].each { |step| yield step }
+        end
+    end
+
+    def build_word_chain(word1, word2)
+        current = [word1.to_sym]
+        pre = { current[0] => nil } 
+        target = word2.to_sym
+        catch(:done) do
+            until current.empty?
+                next_step = []
+                current.each do |csym|
+                    each_possible_step(csym.to_s) do |ssym|
+                        unless pre.has_key? ssym
+                            pre[ssym] = csym
+                            throw(:done) if ssym == target
+                            next_step << ssym
+                        end
+                    end
+                end
+                current = next_step
+            end
+            return nil 
+        end
+
+        chain = [target]
+        chain << target while target = pre[target]
+        chain.reverse
+    end
+
+    def self.load_from_file(file_name)
+        word_steps = new
+        file_name.each do |line|
+            word = line.strip
+            word_steps.add_word(word.upcase)
+        end
+        word_steps
+    end
+end
+
+def split_words(array2)
+  n = 0
+  while n < array2.length
+    array2[n].map!{|x| x.split(//)}
+    n += 1
+  end
+  array2
+end
+
+
+def get_single_score(elem)
+      elem_value = $global_hash[elem]
+      elem_value
+end
+
+
+def map_letters_to_scores(array)
+    r = 0
+    while r < array.length
+        array[r].map! {|x| get_single_score(x)}
+        r += 1
+    end
+    array
+end
+
+def map_letters_to_scores_shallow(array)
+    array.map!{|x| get_single_score(x)}
+end
+
+def sum_elements(array)
+    i = 0
+    while i < array.length
+        array[i] = array[i].inject{|sum,x| sum + x}
+        i += 1
    end
+   array
 end
 
+def reduce_even_arrays(array)
+    y = 0
+    while y < array.length
+        array[y].map!(&:to_s)
+        y += 1
+    end
 
-def prevent_duplicates(a)
-  minimum = a.inject(Hash.new(0)) {|hash, val| hash[val] += 1; hash}.entries.max_by {|entry| entry.last}
-  if minimum[1] == 1
-  else
-  a.slice!(a.index(minimum[0]))
-    prevent_duplicates(a)
-  end
-  a
-end
+    i = 0
+    while i < array.length
+        array[i].map!{|x| x.split(' ')}
+        i += 1
+    end
 
-def sort_letters(arry)
-  b = arry.group_by(&:first).values.map {|e| e.length > 1 ? e : e.flatten}
-  x = 0
-while x < b.length
-  if b[x].length % 2 == 0 
-    b.delete_at(b.index(b[x])) 
-  end
-x += 1
+    v = 0
+    while v < array.length
+      split_words(array[v])
+      v += 1 
+    end
+  
+  array.map!{|x| x.flatten(1)}#=> [[["D", "U", "C", "K"], ["R", "U", "C", "K"]], [["R", "U", "S", "K"], ["R", "U", "S", "E"]]
+  
+  w = 0
+  while w < array.length
+    map_letters_to_scores(array[w]) 
+    w += 1
+  end #=> [[[2, 1, 3, 5], [1, 1, 3, 5]], [[1, 1, 1, 5], [1, 1, 1, 1], [1, 1, 3, 4]]]
  
-end
-  b
+ c = 0
+ while c < array.length
+    sum_elements(array[c])
+    c += 1
+  end #=> [[11, 10], [8, 4, 9]]
+
+array.map!(&:sort)
+array.each{|x| x.shift}
+array.map!{|x| x.inject{|sum,x| sum + x}}
+array.sort!
+array_value = array.pop
+array_value
+
 end
 
+def flatten_and_sum(array)
+    
+    i = 0
+    while i < array.length
+        array[i].map!(&:to_s)
+        i += 1
+    end
+
+    i = 0
+    while i < array.length
+        array[i].map!{|x| x.split(' ')}
+        i += 1
+    end
+
+   v = 0
+    while v < array.length
+      split_words(array[v])
+      v += 1 
+    end
+  array.map!{|x| x.flatten!} #=> [["D", "U", "C", "K", "R", "U", "C", "K", "R", "U", "S", "K", "R", "U", "S", "E", "R", "U", "B", "E"], ["D", "U", "C", "K", "R", "U", "C", "K", "R", "U", "S", "K"]] 
+  array.map!{|x| map_letters_to_scores_shallow(x)}
+  array.map!{|x| x.inject{|sum,x| sum + x}}
+  array.sort!
+  array_value = array.pop
+  array_value
+
+end
+
+def shuffle_and_sum(array)
+  array.sort!
+  first = array[0]
+  word_steps = WordSteps.load_from_file(array)
+  chains_array = []
+  i = 0
+  while i < array.length
+    chain = word_steps.build_word_chain(first, array[i])
+    if chain
+      chains_array.push(chain) #=>DUCKRUCKRUSKRUSERUBEDUCKRUCKRUSKRUSERUBERUBYDUCKRUCKDUCKRUCKRUSKRUSEDUCKRUCKRUSK
+    end
+    i += 1
+  end
+
+chains_array[3]
+end
+
+
+def check_and_sum(array)
+  
+  elim_dups = prevent_duplicates(array)
+
+  ensure_odd = check_for_even(elim_dups)  #=>[["B", "E", "O"], ["E", "A", "X"], ["P", "X", "I"], ["R", "E", "A"], ["Z", "S", "A"]]
+  
+  ensure_odd.map! {|x| get_single_score(x)}
+  ensure_odd.inject{|sum,x| sum + x}
+
+end
 
 def find_scrabble_score(args)
     number_of_letters = args[0].to_i
     args.shift[0] && args.shift[1]
     word_of_correct_len = []
-    word_values = []
-
 
     i = 0 
       while i < args.length
@@ -79,37 +232,15 @@ def find_scrabble_score(args)
     return 0
     break
   end
-    sort_words = word_of_correct_len.sort
-
-  str_to_array = sort_words.map! { |x| x.split(//) }
-  sorted_letters = sort_letters(prevent_duplicates(str_to_array))
-  lead_array = sorted_letters.shift
   
-  i = 0
-  value_arry = []
-  while i < lead_array.length
-    if lead_array.length > 1
-      letter = lead_array[i].flatten
-      value = letter.each {|x| value_arry.push(hash_lookup(x))}
-    
-    else lead_array == 1
-      letter = lead_array[i]
-      value = letter.each {|x| value_arry.push(hash_lookup(x))}
-    
-end
- i += 1
-end
- #add_word_values(value_arry)
- print str_to_array
-end
-
-#you need to use regular expressions
-#flatten is killing you - get rid of it
-#move upcase! like you thought you did
-#after sorting, you must see if adjacent elements differ by only one letter, if so, you check the other side
-#use permutations class iterate based on length of elements
-
-
+  if word_of_correct_len[0].length == 1
+    check_and_sum(word_of_correct_len)
+  else
+    #word_of_correct_len
+    shuffle_and_sum(word_of_correct_len)
+  end
+  end
+  
 stringify_input = $stdin.map {|x| x.to_s}
 strip_newlines = stringify_input.map {|y| y.gsub(/[\n]+/, "")}
 print find_scrabble_score(strip_newlines)

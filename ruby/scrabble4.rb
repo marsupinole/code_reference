@@ -100,6 +100,10 @@ def map_letters_to_scores(array)
     array
 end
 
+def map_letters_to_scores_shallow(array)
+    array.map!{|x| get_single_score(x)}
+end
+
 def sum_elements(array)
     i = 0
     while i < array.length
@@ -143,8 +147,8 @@ def reduce_even_arrays(array)
   end #=> [[11, 10], [8, 4, 9]]
 
 array.map!(&:sort)
-array.map!(&:shift)
-
+array.each{|x| x.shift}
+array.map!{|x| x.inject{|sum,x| sum + x}}
 array.sort!
 array_value = array.pop
 array_value
@@ -170,9 +174,13 @@ def flatten_and_sum(array)
       split_words(array[v])
       v += 1 
     end
-  array.map!{|x| x.flatten!}
+  array.map!{|x| x.flatten!} #=> [["D", "U", "C", "K", "R", "U", "C", "K", "R", "U", "S", "K", "R", "U", "S", "E", "R", "U", "B", "E"], ["D", "U", "C", "K", "R", "U", "C", "K", "R", "U", "S", "K"]] 
+  array.map!{|x| map_letters_to_scores_shallow(x)}
+  array.map!{|x| x.inject{|sum,x| sum + x}}
+  array.sort!
+  array_value = array.pop
+  array_value
 
-#map letters to number, sort, shift
 end
 
 array = ["DUCK", "RUBE", "RUBY", "RUCK", "RUSE", "RUSK", "SAME"]
@@ -204,9 +212,12 @@ while w < chains_array.length
     end
     w += 1
 end
- #reduce_even_arrays(even_arrays)
- #flatten_and_sum(odds_arrays)
- print odds_arrays[0][0]
+ values_array = []
+ values_array.push(reduce_even_arrays(even_arrays))
+ values_array.push(flatten_and_sum(odds_arrays))
+ values_array.shift!
+ final_value = values_array.pop
+ final_value
 end
 
 shuffle_and_sum(array)
