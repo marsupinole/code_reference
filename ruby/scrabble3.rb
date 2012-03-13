@@ -186,9 +186,11 @@ end
 def shuffle_and_sum(array)
   array.sort!
   first = array[0]
+  #last = array[array.length - 1]
   word_steps = WordSteps.load_from_file(array)
   chains_array = []
   i = 0
+  #v = 0
   while i < array.length
     chain = word_steps.build_word_chain(first, array[i])
     if chain
@@ -197,7 +199,31 @@ def shuffle_and_sum(array)
     i += 1
   end
 
-chains_array[3]
+  #while v < array.length
+    #chain2 = word_steps.build_word_chain(last, array[v])
+    #if chain2
+      #chains_array.push(chain2) #=>DUCKRUCKRUSKRUSERUBEDUCKRUCKRUSKRUSERUBERUBYDUCKRUCKDUCKRUCKRUSKRUSEDUCKRUCKRUSK
+    #end
+    #v += 1
+  #end
+
+w = 0
+even_arrays = []
+odds_arrays = []
+while w < chains_array.length
+    if chains_array[w].length % 2 == 0
+        even_arrays.push(chains_array[w])  #=>DUCKRUCKRUSKRUSERUBERUBYDUCKRUCKDUCKRUCKRUSKRUSE
+    else
+        odds_arrays.push(chains_array[w])  #=>DUCKRUCKRUSKRUSERUBEDUCKRUCKRUSK
+    end
+    w += 1
+end
+ values_array = []
+ values_array.push(reduce_even_arrays(even_arrays))
+ values_array.push(flatten_and_sum(odds_arrays))
+ values_array.sort!
+ final_value = values_array.pop
+ final_value
 end
 
 
