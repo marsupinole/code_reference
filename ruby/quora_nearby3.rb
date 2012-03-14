@@ -27,9 +27,9 @@ def create_topic_scores(array)
   
   array_hash = Hash[ *array.collect { |v| [ v, array.index(v) ] }.flatten ].sort.flatten
 
-  $array = array
+  $coordinant_scores = array
   
-  $array_hash = Hash[ *array_hash ].invert
+  $coordinant_hash = Hash[ *array_hash ].invert
 end
 
 def create_distance_scores(array)
@@ -238,11 +238,11 @@ create_topic_scores(topic_array_split)
 #topic_integer_array2 = remake_integers(topic_array) #=> silly, [[0, 0, 0], [1, 1, 1], [2, 2, 2]]
 #topic_score_map = combine_distances_and_hash(topic_integer_array2) #=>{0=>0.0, 1=>1.4142135623730951, 2=>2.8284271247461903}
 #$global_topic_score = topic_score_map
-$global_topic_score = $array_hash
+$global_topic_score = $coordinant_hash
 
 distance_scores = create_distance_scores(remove_params_topics)
 
 query_array_mixed = mix_query_array(query_array_split) #=> [["t", 2, 0, 0], ["q", 5, 100, 100]]
 #route_query_array(query_array_mixed, mapped_coordinates, topic_score_map, distance_scores)
-route_query_array(query_array_mixed, $array, $array_hash, distance_scores)
+route_query_array(query_array_mixed, $coordinant_scores, $coordinant_hash, distance_scores)
 #print remove_indexes

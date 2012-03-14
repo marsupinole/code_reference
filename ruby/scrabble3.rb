@@ -200,7 +200,7 @@ def shuffle_and_sum(array)
   end
 
   #while v < array.length
-    #chain2 = word_steps.build_word_chain(last, array[v])
+    #chain2 = word_steps.build_word_chain(array[v], last)
     #if chain2
       #chains_array.push(chain2) #=>DUCKRUCKRUSKRUSERUBEDUCKRUCKRUSKRUSERUBERUBYDUCKRUCKDUCKRUCKRUSKRUSEDUCKRUCKRUSK
     #end
