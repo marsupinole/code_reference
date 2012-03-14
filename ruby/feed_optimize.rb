@@ -21,10 +21,30 @@ def arrays_to_i(array)
   array
 end
 
-def quora_feed_optimizer(meta, story, reload)
-    reload.flatten!
-	reload_min_time = reload[0] - 10
-	print story.take_while {|x| x[0] > reload_min_time and x[0] < reload[0]} #=> [[11, 50, 30]]
+def quora_feed_optimizer(meta_array, story_array, reload_array)
+	minimum_times = []
+	aggregate_array = []
+    reload_array.flatten!
+    $reload_quantity = reload_array.length
+    
+    i = 0
+    while i < reload_array.length
+    	minimum_times.push(reload_array[i] - 10)
+    	i += 1
+    end
+    
+    story_array.map{|x| x.push(story_array.index(x) + 1)}
+    
+    x = 0
+    while x < minimum_times.length
+    	aggregate_array.push(story_array.take_while{|m| m[0] > minimum_times[x] and m[0] < reload_array[x]})
+    	x += 1
+    end
+
+    print aggregate_array
+
+    #story_arrayInTime = story_array.take_while {|x| x[0] > reload_min_time and x[0] < reload_array[0]} #=> [[11, 50, 30]]
+	#print meta_array
 	#shift out the time for this set, index the array, divide scores by browser height - the bigger the better
 	# sort and reverse based on this new meta score until browser limit is reached 
 end
