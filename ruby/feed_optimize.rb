@@ -45,8 +45,8 @@ def quora_feed_optimizer(meta_array, story_array, reload_array)
     	i += 1
     end #=> [2, 5, 6, 11, 12]
     
-    #story_array.map{|x| x.push(story_array.index(x) + 1)} #=> [[11, 50, 30, 1], [13, 40, 20, 2], [14, 45, 40, 3], [18, 45, 20, 4]]
-    #story_array.map!{|x| x.push(x[1].to_f / x[2].to_f)} #=> [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125], [18, 45, 20, 4, 2.25]]
+    story_array.map{|x| x.push(story_array.index(x) + 1)} #=> [[11, 50, 30, 1], [13, 40, 20, 2], [14, 45, 40, 3], [18, 45, 20, 4]]
+    story_array.map!{|x| x.push(x[1].to_f / x[2].to_f)} #=> [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125], [18, 45, 20, 4, 2.25]]
     
     x = 0
     while x < reload_array.length
@@ -55,13 +55,21 @@ def quora_feed_optimizer(meta_array, story_array, reload_array)
     end
     
     y = 0
-    mike = []
+    aggregate2 = []
     while y < aggregate_array.length
-    	mike.push(elim_to_large(aggregate_array[y], minimum_times[y]))
+    	aggregate2.push(elim_to_large(aggregate_array[y], minimum_times[y]))
     	y += 1
     end
 
-    print mike[4] #=> [[[11, 50, 30, 1, 1.6666666666666667]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [], []]
+    j = 0
+    while j < aggregate2.length
+    	aggregate2[j].map!{|x| x.reverse}
+    	aggregate2[j].sort!
+    	j += 1
+    end
+
+    print aggregate2[0] #=> [[[11, 50, 30, 1, 1.6666666666666667]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [], []]
+    browser_height = meta_array[2]
 
     #story_arrayInTime = story_array.take_while {|x| x[0] > reload_min_time and x[0] < reload_array[0]} #=> [[11, 50, 30]]
 	#print meta_array
