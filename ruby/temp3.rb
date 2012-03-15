@@ -1,68 +1,83 @@
-array = ["AD", "AX", "AY", "BO", "EX", "PI", "RA", "ZA"]
+#make two arrays, for each R, find the S's in that time range, add the scores, use permutation 
+#script you found and find the maximum score that fits the browser height
 
-class Array
-    def swap!(a,b)
-         self[a], self[b] = self[b], self[a]
-    self
-    end
+#9 10 100
+#S 11 50 30
+#R 12
+#S 13 40 20
+#S 14 45 40
+#R 15
+#R 16
+#S 18 45 20
+#R 21
+#R 22
+
+def arrays_to_i(array)
+  y = 0
+  while y < array.length
+    array[y].map!(&:to_i)
+    y += 1
+  end
+  array
 end
 
-scrabble_hash = {"A" => 1, "E" => 1, "I" => 1, "L" => 1, "N" => 1, "O" => 1, "R" => 1, "S" => 1, "T" => 1, "U" => 1, "D" => 2, "G" => 2, "B" => 3, "C" => 3, "M" => 3, "P" => 3, "F" => 4, "H" => 4, "V" => 4, "W" => 4, "Y" => 4, "K" => 5, "J" => 8, "X" => 8, "Q" => 10, "Z" => 10}
-$global_hash = scrabble_hash
+def quora_feed_optimizer(meta_array, story_array, reload_array)
+  minimum_times = []
+  aggregate_array = []
+    reload_array.flatten! #=> [12, 15, 16, 21, 22]
+    $reload_quantity = reload_array.length
+    
+    i = 0
+    while i < reload_array.length
+      minimum_times.push(reload_array[i] - 10)
+      i += 1
+    end #=> [2, 5, 6, 11, 12]
+    
+    story_array.map{|x| x.push(story_array.index(x) + 1)} #=> [[11, 50, 30, 1], [13, 40, 20, 2], [14, 45, 40, 3], [18, 45, 20, 4]]
+    story_array.map!{|x| x.push(x[1].to_f / x[2].to_f)} #=> [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125], [18, 45, 20, 4, 2.25]]
+    
+    #x = 0
+    #while x < minimum_times.length
+      #aggregate_array.push(story_array.take_while{|m| m[0] >= minimum_times[x] and m[0] <= (minimum_times[x] + 10)})
+      #x += 1
+    #end
 
-def get_single_score(elem)
-      elem_value = $global_hash[elem]
-      elem_value
+    
+
+    print reload_array #=> [[[11, 50, 30, 1, 1.6666666666666667]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [], []]
+
+    #story_arrayInTime = story_array.take_while {|x| x[0] > reload_min_time and x[0] < reload_array[0]} #=> [[11, 50, 30]]
+  #print meta_array
+  #shift out the time for this set, index the array, divide scores by browser height - the bigger the better
+  # sort and reverse based on this new meta score until browser limit is reached 
 end
 
-def prevent_duplicates(a)
-  minimum = a.inject(Hash.new(0)) {|hash, val| hash[val] += 1; hash}.entries.max_by {|entry| entry.last}
-  if minimum[1] == 1
+
+
+stdin_input = ["9 10 100", "S 11 50 30", "R 12", "S 13 40 20", "S 14 45 40", "R 15", "R 16", "S 18 45 20", "R 21", "R 22"]
+
+meta_array = stdin_input[0].split(' ').map!(&:to_i)
+
+stdin_input.shift
+
+stdin_input.map! {|x| x.split(' ')}
+
+story_array = []
+reload_array = []
+i = 0
+while i < stdin_input.length
+  if stdin_input[i][0] == "S"
+    story_array.push(stdin_input[i])
   else
-  a.slice!(a.index(minimum[0]))
-    prevent_duplicates(a)
+    reload_array.push(stdin_input[i])
   end
-  a
+  i += 1
 end
+   
+story_array.each(&:shift) #=> [["11", "50", "30"], ["13", "40", "20"], ["14", "45", "40"], ["18", "45", "20"]]
 
-def sort_letters(arry)
-  b = arry.group_by(&:first).values.map {|e| e.length > 1 ? e : e.flatten}
-  x = 0
-while x < b.length
-  if b[x].length % 4 == 0 
-    b.delete_at(b.index(b[x])) 
-  end
-x += 1
- 
-end
-  b
-end
+reload_array.each(&:shift) #=> [["12"], ["15"], ["16"], ["21"], ["22"]]
 
-def shuffle_and_sum(array)
-  split_array = array.map! { |x| x.split(//) } #=> ["A", D"], ["A", X"], [..etc
-  
-  elim_dups = prevent_duplicates(split_array) #=> everything except the 'z, a'
+arrays_to_i(story_array) and arrays_to_i(reload_array)
 
-  sort_arry = sort_letters(elim_dups)  #=>[[["A", "H"], ["A", "X"], ["A", "Y"]], ["B", "O"], ["E", "X"], ["P", "I"], ["R", "A"], ["Z", "A"]]
-  
-  i = 0
-  score_array = []
-  while i < sort_arry.length
-   if sort_arry[i].class == Array
-      sort_arry[i].flatten!
-      sort_arry[i].map! {|x| get_single_score(x)}
-      score_array[i] = sort_arry[i].inject{|sum,x| sum + x}
-  else
-  	  sort_arry[i].map! {|x| get_single_score(x)}
-      score_array[i] = sort_arry[i].inject{|sum,x| sum + x}
-  end
-    i += 1
-  end
-answer = score_array.sort.pop
-answer
-end
-
-print shuffle_and_sum(array)
-  #print john.inject{|sum,x| sum + x }
-  #print "\n"
-  #print alan[0]
+quora_feed_optimizer(meta_array, story_array, reload_array)

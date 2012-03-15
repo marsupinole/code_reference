@@ -21,27 +21,47 @@ def arrays_to_i(array)
   array
 end
 
+def elim_to_large(array, minimum)
+	array2 = []
+	j = 0
+	while j < array.length
+		if array[j][0] >= minimum
+			array2.push(array[j])
+		end
+		j += 1
+	end
+	array2
+end
+
 def quora_feed_optimizer(meta_array, story_array, reload_array)
 	minimum_times = []
 	aggregate_array = []
-    reload_array.flatten!
+    reload_array.flatten! #=> [12, 15, 16, 21, 22]
     $reload_quantity = reload_array.length
     
     i = 0
     while i < reload_array.length
     	minimum_times.push(reload_array[i] - 10)
     	i += 1
-    end
+    end #=> [2, 5, 6, 11, 12]
     
-    story_array.map{|x| x.push(story_array.index(x) + 1)}
+    #story_array.map{|x| x.push(story_array.index(x) + 1)} #=> [[11, 50, 30, 1], [13, 40, 20, 2], [14, 45, 40, 3], [18, 45, 20, 4]]
+    #story_array.map!{|x| x.push(x[1].to_f / x[2].to_f)} #=> [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125], [18, 45, 20, 4, 2.25]]
     
     x = 0
-    while x < minimum_times.length
-    	aggregate_array.push(story_array.take_while{|m| m[0] > minimum_times[x] and m[0] < reload_array[x]})
+    while x < reload_array.length
+    	aggregate_array.push(story_array.take_while{|m| m[0] <= reload_array[x]})
     	x += 1
     end
+    
+    y = 0
+    mike = []
+    while y < aggregate_array.length
+    	mike.push(elim_to_large(aggregate_array[y], minimum_times[y]))
+    	y += 1
+    end
 
-    print aggregate_array
+    print mike[4] #=> [[[11, 50, 30, 1, 1.6666666666666667]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [], []]
 
     #story_arrayInTime = story_array.take_while {|x| x[0] > reload_min_time and x[0] < reload_array[0]} #=> [[11, 50, 30]]
 	#print meta_array
