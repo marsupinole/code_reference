@@ -11,6 +11,7 @@ end
 
 def final_total(array)
 	final_array = []
+	array.sort!
 	array.flatten!
 	hash = Hash[*array]
 	values = hash.values

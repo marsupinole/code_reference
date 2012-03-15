@@ -1,17 +1,3 @@
-#make two arrays, for each R, find the S's in that time range, add the scores, use permutation 
-#script you found and find the maximum score that fits the browser height
-
-#9 10 100
-#S 11 50 30
-#R 12
-#S 13 40 20
-#S 14 45 40
-#R 15
-#R 16
-#S 18 45 20
-#R 21
-#R 22
-
 def arrays_to_i(array)
   y = 0
   while y < array.length
@@ -48,6 +34,19 @@ def test_upper_bound(array)
   upper_bound = browser_height_array.inject{|sum,x| sum + x}
   inside_bound = trim_bound(array, upper_bound)
   inside_bound
+end
+
+def final_total(array)
+	final_array = []
+	array.sort!
+	array.flatten!
+	hash = Hash[*array]
+	values = hash.values
+	value_total = values.inject{|sum,x| sum + x}
+	final_array.push(value_total)
+	final_array.push(hash.keys.length)
+	final_array.push(hash.keys)
+	final_array.flatten!
 end
 
 def quora_feed_optimizer(meta_array, story_array, reload_array)
@@ -89,19 +88,23 @@ def quora_feed_optimizer(meta_array, story_array, reload_array)
     $browser_height = meta_array[2]
 
     aggregate2.map!{|x| test_upper_bound(x)}
-    print aggregate2.length
-    scores = []
+    
+    y = 0 
+    while y < aggregate2.length
+    aggregate2[y].map(&:shift)
+    aggregate2[y].map(&:pop)
+    aggregate2[y].map{|x| x.slice!(1)}
+    y += 1
+    end
 
+   aggregate2.map!{|x| final_total(x)}
+   aggregate2.map!{|x| x.join(' ')}
+   aggregate2.each {|x| print "#{x}" + "\n" }
 
-    #story_arrayInTime = story_array.take_while {|x| x[0] > reload_min_time and x[0] < reload_array[0]} #=> [[11, 50, 30]]
-	#print meta_array
-	#shift out the time for this set, index the array, divide scores by browser height - the bigger the better
-	# sort and reverse based on this new meta score until browser limit is reached 
 end
 
-
-
-stdin_input = ["9 10 100", "S 11 50 30", "R 12", "S 13 40 20", "S 14 45 40", "R 15", "R 16", "S 18 45 20", "R 21", "R 22"]
+stringify_input = $stdin.map {|x| x.to_s}
+stdin_input = stringify_input.map {|y| y.gsub(/[\n]+/, "")}
 
 meta_array = stdin_input[0].split(' ').map!(&:to_i)
 
