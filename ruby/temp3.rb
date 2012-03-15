@@ -8,21 +8,21 @@ while y < array.length
   y += 1
 end
 
-#print array
 
-#array.map!{|x| x.push(x.length)}
-
-#print array
 def final_total(array)
-	#hash array
-	#final_array.push(values total)
-	#final_array.push(keys.length)
-	#final_array.push(keys)
+	final_array = []
+	array.flatten!
+	hash = Hash[*array]
+	values = hash.values
+	value_total = values.inject{|sum,x| sum + x}
+	final_array.push(value_total)
+	final_array.push(hash.keys.length)
+	final_array.push(hash.keys)
+	final_array.flatten!
 end
 
 array.map!{|x| final_total(x)}
+array.map!{|x| x.join(' ')}
+array.each {|x| print "#{x}" + "\n" }
 
-#array.map!(&:sort!)
 
-
-#a.map{|x| x.slice!(1)}
