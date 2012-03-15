@@ -33,6 +33,23 @@ def elim_to_large(array, minimum)
 	array2
 end
 
+def trim_bound(array, upper_bound)
+  if upper_bound <= $browser_height
+  	array
+  else
+  	array.shift
+  	test_upper_bound(array)
+  end
+end
+
+def test_upper_bound(array)
+  browser_height_array = []
+  array.each{|x| browser_height_array.push(x[2])}
+  upper_bound = browser_height_array.inject{|sum,x| sum + x}
+  inside_bound = trim_bound(array, upper_bound)
+  inside_bound
+end
+
 def quora_feed_optimizer(meta_array, story_array, reload_array)
 	minimum_times = []
 	aggregate_array = []
@@ -69,7 +86,11 @@ def quora_feed_optimizer(meta_array, story_array, reload_array)
     end
 
     print aggregate2[0] #=> [[[11, 50, 30, 1, 1.6666666666666667]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [[11, 50, 30, 1, 1.6666666666666667], [13, 40, 20, 2, 2.0], [14, 45, 40, 3, 1.125]], [], []]
-    browser_height = meta_array[2]
+    $browser_height = meta_array[2]
+
+    aggregate2.map!{|x| test_upper_bound(x)}
+    scores = []
+
 
     #story_arrayInTime = story_array.take_while {|x| x[0] > reload_min_time and x[0] < reload_array[0]} #=> [[11, 50, 30]]
 	#print meta_array
