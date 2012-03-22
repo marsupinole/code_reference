@@ -79,7 +79,7 @@ def quora_feed_optimizer(meta_array, story_array, reload_array)
 
     j = 0
     while j < aggregate2.length
-    	aggregate2[j].map!{|x| x.reverse}
+    	aggregate2[j].map!(&:reverse)
     	aggregate2[j].sort!
     	j += 1
     end

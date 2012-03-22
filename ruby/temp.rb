@@ -1,39 +1,24 @@
-array = [[9, 2], [4, 1], [7, 1], [6, 1]]
-comments = [[0, 0, 0], [1, 1, 1], [2, 2, 2]] 
+aggregate2 = [[[50, 1]], [[40, 2], [45, 3], [50, 1]], [[40, 2], [45, 3], [50, 1]], [[45, 4], [45, 3], [50, 1]], [[40, 2], [45, 4], [45, 3]]]
 
-def shift_comments(array)
-  array.each {|x| x.shift} 
+def final_total(array)
+	final_array = []
+	h = 0
+	while h < array.length
+		array[h].reverse!
+		h += 1
+	end
+	array.sort!
+	array.flatten!
+	hash = Hash[*array]
+	values = hash.values
+	value_total = values.inject{|sum,x| sum + x}
+	final_array.push(value_total)
+	final_array.push(hash.keys.length)
+	final_array.push(hash.keys)
+	final_array.flatten!
 end
 
-def map_distance_coordinants(array)
-  array.map {|x,y| [Math.sqrt(x*x + y*y)]}
-end
+aggregate2.map!{|x| final_total(x)}
+   aggregate2.map!{|x| x.join(' ')}
+   aggregate2.each {|x| print "#{x}" + "\n" }
 
-def input_is_comment_format(comments)
-
-  distance_coordinants = shift_comments(comments)
-
-  mapped_coordinanats = map_distance_coordinants(distance_coordinants)
-
-  p mapped_coordinanats
-end
-
-i = 0
-while i < array.length
-  input_is_comment_format(comments)
-  i += 1
-end
-#remove_element_from_a(question_integer_array)
-#Each elem in stin is routed by eitther 't' or 'q' and piped into a huge function, the return is piped to standard out
-
-#make hash with question distance scores, reverse the hash and then push the query score, then sort the keys 
-
-#flatten, add the 100, sort it, remove excess based on second column, and map to topic id's
-
-#1.00 1.00 means right triangle so a^2 + b^2 = c^2.  They WILL test you on decimals.  Just change the topic scores and remap
-
-#Your doing it top down, it needs to be bottom up i.e. take the query values first
-
-#checkout this for moving question value back to topic val? h.invert   #=> {0=>"a", 100=>"m", 200=>"d", 300=>"y"}
-
-#place query score into array of scores, sort, and reverse map back to id's
